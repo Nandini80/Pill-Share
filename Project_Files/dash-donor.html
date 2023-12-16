@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Donor dash Board</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("#btnsetup").click(function(){
+      var emailk = $("#txtEmail").val();
+      var oldpwdk = $("#oldpwd").val();
+      var newpwdk = $("#newpwd").val();
+      var compwdk = $("#compwd").val();
+      var obj={
+        type:"get",
+        url: "/donor-settings-update-pwd",
+        data:{
+          email :emailk,
+          op : oldpwdk,
+          np : newpwdk,
+          cp : compwdk
+        }
+      }
+      $.ajax(obj).done(function(resp)
+      {
+        // alert(JSON.stringify(resp));
+        $("#ast").html(resp);
+      }).fail(function(err)
+      {
+        $("#ast").html(err);
+      });
+    });
+    //============================== For Donor Id at top===========================
+    setActiveUser();
+    function setActiveUser()
+    {
+      if(localStorage.getItem("activeK")==undefined)
+      {
+        location.href="index.html";
+        return ;
+      }
+
+      var au = localStorage.getItem("activeK");
+      $("#PrintDonor").html(au);
+      $("#txtEmail").val(au).prop("readonly",true);
+    }
+
+    //======================================TO logout================================
+    $("#doLogout").click(function()
+    {
+      localStorage.removeItem("activeK");
+      location.replace("/index.html");
+      return;
+    });
+
+  });
+</script>
+</head>
+<body style="width: 100%;" onload="setActiveUser();">
+  <nav class="navbar navbar-expand-lg">
+    <div class="col-md-12" style="margin-top: 0%;">
+      <a class="navbar-brand" href="#">
+        <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
+          class="d-inline-block align-text-top ms-3">
+        <span class="text-black" style="font-size: larger;">PiLLshArE</span>
+        <button class="btn btn-primary offset-md-9" id="doLogout">Logout</button>
+      </a>
+    </div>
+  </nav>
+
+  <!-- =================================Cards============================= -->
+  <div class="offset-md-4 fs-2 fw-semibold">WELCOME <span id="PrintDonor">*</span></div>
+  <div class="container-fluid">
+  <div class="row mt-4">
+    <div class="col-md-3">
+      <div class="card ms-1" style="width: 18rem;">
+        <img src="pics_used/profile_img.png" class="card-img-top mt-2"
+          style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available">
+        <div class="card-body">
+          <h5 class="card-title offset-md-3">Donor Profile</h5>
+          <a href="/donor-profile.html" class="btn btn-primary offset-md-4">Click here</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card ms-2" style="width: 18rem;">
+        <img src="pics_used/medicines_img3.jpg" class="card-img-top mt-2"
+          style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available">
+        <div class="card-body">
+          <h5 class="card-title offset-md-2">Donate Medicines</h5>
+          <a href="/avail-med.html" class="btn btn-primary offset-md-4">Click here</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card ms-2" style="width: 18rem;">
+        <img src="pics_used/medicines_img.jpg" class="card-img-top offset-md-4 mt-2"
+          style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available">
+        <div class="card-body">
+          <h5 class="card-title ms-2">Medicines Donated Status</h5>
+          <a href="/med-manager.html" class="btn btn-primary offset-md-4">Click here</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card ms-2" style="width: 18rem;">
+        <img src="pics_used/settings2.jpg" class="card-img-top offset-md-1 mt-2"
+          style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available">
+        <div class="card-body">
+          <h5 class="card-title offset-md-3">Go To Settings</h5>
+          <button type="button" class="btn btn-primary offset-md-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Click here</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!--=================================== settings Modal========================= -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 offset-md-5" id="exampleModalLabel">Settings</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-5 offset-md-4">
+            <h5>Change Password</h5>
+          </div>
+          <div class="col-md-11 ms-2 mb-1">
+            <label for="txtEmail" class="form-label mt-2">Email</label>
+            <input type="email" name="txtEmail" class="form-control" id="txtEmail"  placeholder="abc@gmail.com">
+          </div>
+          <div class="col-md-11 ms-2 mb-1">
+            <label for="oldpwd" class="form-label mt-2">Old password</label>
+            <input type="password" name="oldpwd" class="form-control" id="oldpwd">
+          </div>
+          <div class="col-md-11 ms-2 mb-1">
+            <label for="newpwd" class="form-label mt-2">New password</label>
+            <input type="password" name="newpwd" class="form-control" id="newpwd">
+          </div>
+          <div class="col-md-11 ms-2 mb-2">
+            <label for="compwd" class="form-label mt-2">Confirm password</label>
+            <input type="password" name="compwd" class="form-control" id="compwd">
+          </div>
+        </div>
+        <div>
+          <button type="button" id="btnsetup" class="btn btn-primary offset-md-5 mb-2">Update</button>
+          <span id="ast" style="font-weight:500;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

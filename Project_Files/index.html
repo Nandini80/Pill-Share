@@ -1,0 +1,547 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PiLLshArE Dashboard</title>
+    <!-- Links for eye in password -->
+    <link rel="stylesheet" href="style/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap link -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- JQuery link -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+
+<script>
+    $(document).ready(function () {
+        //=================Sign-Up script on submit clcik=======================
+        $("#show").click(function () {
+            var emailKuch = $("#txtEmail").val();
+            var pwdKuch = $("#txtPwd").val();
+            var optKuch = $("#type").val();
+            var obj = {
+                type: "get",
+                url: "/ajax-signup",
+                data: {
+                    emailK: emailKuch,
+                    pwdK: pwdKuch,
+                    optK: optKuch
+                }
+            }
+            $.ajax(obj).done(function (respKuch) {
+                //  alert(JSON.stringify(respKuch));
+                $("#result").html(respKuch);
+            }).fail(function (errKuch) {
+                //   alert(JSON.stringify(errKuch));
+                $("#result").html(errKuch);
+            })
+
+        });
+
+        //==================After clicking Login button======================== 
+        $("#btnloginsub").click(function () {
+            var emailKu = $("#emaillog").val();
+            var pwdKu = $("#pwdlog").val();
+            var obj = {
+                type: "get",
+                url: "/login-ajax",
+                data: {
+                    eml: emailKu,
+                    pd: pwdKu
+                }
+            }
+            $.ajax(obj).done(function (respKuch) {
+                localStorage.setItem("activeK", $("#emaillog").val()); // For Email by default in inputText
+                if (respKuch == "Donor")
+                    location.href = "dash-donor.html";
+                else {
+                    if (respKuch == "Needy")
+                        location.href = "dash-needy.html";
+
+                    else
+                        alert(JSON.stringify(respKuch));
+                }
+            }).fail(function (err) {
+                alert(err);
+            });
+        });
+        //=================================Otp send button=========================
+        var otpSent;
+        $("#otp").click(function () {
+            var emailo = $("#emailfgt").val();
+            var obj = {
+                type: "get",
+                url: "/send-otp-password-fgt",
+                data:
+                    { fgteml: emailo }
+            }
+            $.ajax(obj).done(function (respKuch) {
+                alert(JSON.stringify(respKuch));
+                otpSent = respKuch[1];
+            }).fail(function (err) {
+                alert(err);
+            });
+        });
+
+        //======================On click of submit after entering otp==============
+        var resp;
+        $("#otpsub").click(function () 
+        { 
+            var otptext = $("#txtotp").val();
+            var emailo = $("#emailfgt").val();
+            var obj =
+            {
+                type: "get",
+                url: "/click-submit-after-filling-otp",
+                data:
+                    { otptx: otptext,
+                      otpst:  otpSent,
+                      key1 : emailo
+                    }
+            }
+            $.ajax(obj).done(function (respKuch) 
+            {  
+                   resp = respKuch;                 //nandinijindal41@gmail.com
+                   doOpen();
+                //  alert(JSON.stringify(respKuch));
+            }).fail(function (errKuch) {
+                  alert(JSON.stringify(errKuch));
+                // $("#result").html(errKuch);
+            })
+        });
+
+        //=======================Reset of password ===============================
+        $("#updpwd").click(function(){
+            var emailo = $("#emailfgt").val();
+            var newpwd = $("#newpwd").val();
+            var conpwd = $("#compwd").val();
+
+            var obj={
+                type:"get",
+                url: "/reset-pwd-in-login",
+                data:{
+                    eml : emailo,
+                    np : newpwd,
+                    cp : conpwd
+                }
+            }
+            $.ajax(obj).done(function(resp)
+            {
+              $("#space").html(resp);
+            }).fail(function(err){
+              $("#space").html(err);
+            });
+        });
+
+
+        //======================
+        function doOpen()
+        {
+          alert(resp);
+          if(resp=="Invalid OTP")
+          {
+            $("#forgot").modal('show');
+          }
+          else
+          {
+            $("#Modal").modal('show');
+            $("#forgot").modal('hide');
+          }
+        }
+        //======================Email in signup valid or not ======================
+        $("#txtEmail").blur(function () {
+            var r = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;  //email verifying code
+            var email = $("#txtEmail").val();
+            if (r.test(email) == true) {
+                $("#astk").html("valid");
+                $("#astk").addClass("txtvalid").removeClass("txtInvalid");
+            }
+            else {
+                $("#astk").html("Invalid");
+                $("#astk").addClass("txtInvalid").removeClass("txtvalid");
+            }
+        });
+
+        //=================Eye in password of login============================
+        var flag = true;
+        $(".fa-solid").click(function () {
+            if (flag == true) {
+                $(this).addClass("fa-eye").removeClass("fa-eye-slash");
+                $("#pwdlog").prop("type", "text");
+                flag = false;
+            }
+            else {
+                $(this).removeClass("fa-eye").addClass("fa-eye-slash");
+                $("#pwdlog").prop("type", "password");
+                flag = true;
+            }
+        });
+
+        //=================Eye in password of signup============================
+        var flag1 = true;  // doubt
+        $(".sign").click(function () {
+            if (flag1 == true) {
+                $("#pwd").addClass("fa-eye").removeClass("fa-eye-slash");
+                $("#txtPwd").prop("type", "text");
+                flag1 = false;
+            }
+            else {
+                $("#pwd").removeClass("fa-eye").addClass("fa-eye-slash");
+                $("#txtPwd").prop("type", "password");
+                flag1 = true;
+            }
+        });
+    });
+    //   crousel interval
+    function dosetInterval() {
+
+        const myCarouselElement = document.querySelector('#carouselExampleIndicators')
+
+        const carousel = new bootstrap.Carousel(myCarouselElement, {
+            interval: 2000,
+        })
+    }
+</script>
+
+<body onload="dosetInterval();" background="pics_used/medbg3.jpg">
+    <!-- =============================NavBar ====================================-->
+    <nav class="navbar navbar-expand-lg" style="height: 50px;background-color: white;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
+                    class="d-inline-block align-text-top">
+                <span class="text-black ms-2" style="font-size: larger;">PiLLshArE</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active ms-4" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Our Services
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#donate">Donate</a></li>
+                            <li><a class="dropdown-item" href="#needy">Needy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="nav-link" href="#aboutUs">About Us</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="nav-link" href="#contact">Contact Us</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="nav-link" href="temsAndConditions.html">Terms and Conditions</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-3" data-bs-toggle="modal"
+                        data-bs-target="#modalsign">SignUp</button>
+                    <button type="button" id="btnlogin" class="btn btn-outline-success mt-3" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">Login</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===============================Modal of signup=========================== -->
+    <div class="modal fade" id="modalsign" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 offset-md-5" id="exampleModalLabel">SignUp</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-1">
+                            <center>
+                                <img src="pics_used/userlogin.png" style="width: 80px;height: 80px;">
+                            </center>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <span id="astk">*</span>
+                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail" autofocus><i
+                                class="fa-solid fa-user usr"></i>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd"><i id="pwd"
+                                class="fa-solid sign fa-eye-slash"></i>
+                        </div>
+                        <div class="mb-3">
+                            <span class="me-2"> Date of signup</span>
+                            <input type="date"
+                                style="border-radius: 7px 7px 7px 7px;padding: 4px 4px 4px 4px;width: 130px;border-color:lightcyan">
+                        </div>
+                        <div class="mb-3 dropdown">
+                            <select class="btn btn-outline-success" id="type">
+                                <option style="background-color: white;color: black;" value="Donor">Donor</option>
+                                <option style="background-color: white;color: black;" value="Needy">Needy</option>
+                            </select>
+                        </div>
+                        <button type="button" id="show" class="btn btn-primary offset-md-5">Submit</button>
+                        <span id="result"></span>
+                        </center>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================Modal of login=========================== -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-4 offset-md-5" id="exampleModalLabel">Login</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="offset-md-4 mt-3">
+                    <img src="pics_used/profile_needy_img.jpg" style="width: 135px; height: 135px;">
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-2">
+                            <label for="emaillog" class="form-label">Email address</label><br>
+                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog"
+                                name="emaillog"><i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pwdlog" class="form-label">Password</label><br>
+                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog"
+                                name="pwdlog"><i class="fa-solid fa-eye-slash"></i>
+                        </div>
+                        <div class="mb-3">
+                            <a data-bs-toggle="modal" data-bs-target="#forgot" id="fgt" class="mt-2">Forgot Password?</a>
+                        </div>
+                        <button type="button" class="btn btn-primary offset-md-5" id="btnloginsub">LOGIN</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- =================================Forgot password modal========================= -->
+    <div class="modal fade" id="forgot" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 offset-md-4" id="exampleModalLabel">Reset Password</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <link rel="stylesheet"
+                        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+                    <div class="container">
+                        <div class="row">
+                            <div class="offset-md-5">
+                                <h3><i class="fa fa-lock fa-4x"></i></h3>
+                            </div>
+                            <h2 class="text-center offset-md-1 col-md-10 mb-5">Forgot Password?</h2>
+                            <!-- <p class="offset-md-3">You can reset your password here.</p> -->
+                            <form id="register-form" role="form" autocomplete="off" class="form" method="post">
+                                <div class="mb-2 mt-1">
+                                    <span class="col-md-4">Enter Your Email Address here</span>
+                                    <input type="email" class="border col-md-9 mt-2 p-2 rounded" id="emailfgt"
+                                        placeholder="Email Address" name="emaillog">
+                                    <button type="button" class="btn btn-primary ms-1 mb-2" id="otp">Send OTP</button>
+                                </div>
+                            </form>
+                            <div>
+                                <span class="col-md-4">Enter Your OTP here</span>
+                                <input type="text" class="border col-md-9 p-2 mt-2 rounded" id="txtotp"
+                                    placeholder="Enter OTP" name="txtotp">
+                                <button type="button" class="btn btn-primary ms-3 mb-2" id="otpsub">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- =========================Modal after filling OTP===================== -->
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-5 offset-md-4">
+                        <h5>Change Password</h5>
+                    </div>
+                    <div class="col-md-11 ms-2 mb-1">
+                        <label for="newpwd" class="form-label mt-2">New password</label>
+                        <input type="password" name="newpwd" class="form-control" id="newpwd">
+                    </div>
+                    <div class="col-md-11 ms-2 mb-2">
+                        <label for="compwd" class="form-label mt-2">Confirm password</label>
+                        <input type="password" name="compwd" class="form-control" id="compwd">
+                    </div>
+                </div>
+                <div>
+                    <button type="button" id="updpwd" class="btn btn-primary offset-md-5 mb-2">Update</button>
+                    <span id="space" style="font-weight:500;">*</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ==================================Carousel=============================== -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+        <center>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="pics_used/charity.jpg" class="rounded d-block w-60" style="height: 500px;width: 100%;"
+                        alt="not available">
+                </div>
+                <div class="carousel-item">
+                    <img src="pics_used/medch1.jpg" class="rounded d-block w-90" style="height: 500px;width: 100%;"
+                        alt="not available">
+                </div>
+                <div class="carousel-item">
+                    <img src="pics_used/medch4.jpg" class="rounded d-block w-70" style="height: 500px;width: 100%;"
+                        alt="not available">
+                </div>
+            </div>
+        </center>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- ======================================================================= -->
+    <div class="mt-3 fs-1" style="text-align: center;">
+        Features And Functionalities</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-7 ms-5 mt-4">
+                <span id="donate" class="fs-2 offset-md-3">Donate for someone to live</span>
+                <p class="text-center fs-4">Your Donation can have significant impact on the health and well-being of
+                    communities, especially in regions where access to healthcare and essential medications is limited.
+                    If there are medicines in your Homes/Shops which are no more needed then you can Donate
+                    them on our website.</p>
+            </div>
+            <div class="col-md-4 mt-4">
+                <img src="pics_used/medc5.jpg" class="rounded" style="width: 300px;height: 300px;text-align: center;"
+                    alt="Not available">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mt-4 ms-5">
+                <img src="pics_used/medc2.jpg" class="rounded" style="width: 300px;height: 300px;text-align: center;"
+                    alt="Not available">
+            </div>
+            <div class="col-md-7 mt-4">
+                <span id="needy" class="fs-2 offset-md-2">Have no money to buy medicines?</span>
+                <p class="text-center fs-4 mt-4">No need to worry now. We are here to help you.
+                    In any case of non-availablility of that particular medicine or it's price is quite high,
+                    You are most welcome to check for that medicine on our website, it is 100% free and we will assure
+                    you that it is not expired.You just need to provide a proper doctor slip or some evidence
+                    to donor while contacting him for the same.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7 ms-5 mt-4">
+                <span class="fs-2 offset-md-4">Secure and Reliable</span>
+                <p class="text-center fs-4 mt-4">Our site is very secure and reliable.Your personal
+                    infomation will not be shared unless we have id proof and complete infomation of the person.
+                    We are non-profitable organisation. We just want to help the people who are actually in need.
+                    <br>
+                    <a href="temsAndConditions.html">Terms and Conditions</a>
+                </p>
+            </div>
+            <div class="col-md-4 mt-4">
+                <img src="pics_used/trust.jpg" class="rounded" style="width: 300px;height: 300px;text-align: center;"
+                    alt="Not available">
+            </div>
+        </div>
+    </div>
+    <div class="text-bg-success " style="width: 100%; height: 70%">
+        <div id="aboutUs" class="fs-2 mt-2" style="color: white; text-align: center;">
+            About Us
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <div class="card mb-3 text-bg-success border border-success" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="pics_used/mine2.jpeg" class="mt-5"
+                                    style="border-radius:20%; width: 200px; height: 200px;" alt="Not available">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title  offset-md-3 fs-3 text-light mt-2">Developed By</h5>
+                                    <p class="card-text text-light ms-3 fs-5 text-center">Hi there, I am Nandini Jindal
+                                        the founder of this
+                                        website. Currently persuing Btech from Jaypee institue of technology,Noida in
+                                        Computer
+                                        science branch.I am very happy to introduce you my very first website <span
+                                            style="font-weight: bold;">PiLLshArE</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <div class="card mb-3 text-bg-success border border-success" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="pics_used/sir.jpeg" class="mt-5"
+                                    style="border-radius:20%; width: 200px; height: 200px;" alt="Not available">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title offset-md-1 fs-3 text-light mt-2">Under The Guidance of</h5>
+                                    <p class="card-text text-light fs-5 ms-4 text-center">I am able to Develop this site
+                                        only because of my
+                                        sir, Mr.Rajesh Bansal (the author of REAL JAVA).
+                                        He helped me in every aspect. He is the Brain of this Website. Thankyou sir for
+                                        all your
+                                        Guidance and support.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center fs-3 mb-1" id="contact">
+            Contact Us at nandinijindal010@gmail.com
+        </div>
+    </div>
+</body>
+
+</html>
