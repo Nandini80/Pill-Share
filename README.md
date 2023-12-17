@@ -2,6 +2,8 @@
 Pill Share is your go-to platform for donating unused medicine and connecting with sellers for free pickups. 
 Give your surplus medicines a purpose by easily sharing them with those in need. Streamlined, altruistic, and convenient – Pill Share makes healthcare accessible to all.
 
+Direct link- https://pillshare.onrender.com <br>
+(Sorry for the inconvience but through this link you can only check dashboard page)
 
 <img width="943" alt="image" src="https://github.com/Nandini80/Pill-Share/assets/121488571/ac7c2f05-f32c-49f3-82cf-2610b607a77d">
 <img width="932" alt="image" src="https://github.com/Nandini80/Pill-Share/assets/121488571/ae26f3a1-63b2-434f-8875-9b0828ed952f">
