@@ -16,13 +16,21 @@ app.get("/", function (req, resp) {
 });
 
 //Connect to sql
+// var dbConfig = {
+//     host: "127.0.0.1",,
+//     user: "root",
+//     password: "test",
+//     database: "bce",
+//     dateStrings: true
+// };
+
 var dbConfig = {
-    host: "127.0.0.1",
-    user: "root",
-    password: "test",
-    database: "bce",
-    dateStrings: true
-};
+    host : "bk0ionmurhfxi1puzbyj-mysql.services.clever-cloud.com",
+    user : "ucdsavpfy5razlfq",
+    password : "UsyWuk7YAcE8rFXUTJGT",
+    database: "bk0ionmurhfxi1puzbyj",
+    dateStrings : true
+}
 
 var dbRef = mysql.createConnection(dbConfig);
 dbRef.connect(function (err) {
