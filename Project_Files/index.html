@@ -169,7 +169,7 @@
 
         //=================Eye in password of login============================
         var flag = true;
-        $(".fa-solid").click(function () {
+        $("#pwdlog").siblings(".fa-solid").click(function () {
             if (flag == true) {
                 $(this).addClass("fa-eye").removeClass("fa-eye-slash");
                 $("#pwdlog").prop("type", "text");
@@ -183,15 +183,15 @@
         });
 
         //=================Eye in password of signup============================
-        var flag1 = true;  // doubt
-        $(".sign").click(function () {
+        var flag1 = true;
+        $("#txtPwd").siblings(".sign").click(function () {
             if (flag1 == true) {
-                $("#pwd").addClass("fa-eye").removeClass("fa-eye-slash");
+                $(this).addClass("fa-eye").removeClass("fa-eye-slash");
                 $("#txtPwd").prop("type", "text");
                 flag1 = false;
             }
             else {
-                $("#pwd").removeClass("fa-eye").addClass("fa-eye-slash");
+                $(this).removeClass("fa-eye").addClass("fa-eye-slash");
                 $("#txtPwd").prop("type", "password");
                 flag1 = true;
             }
@@ -275,13 +275,13 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <span id="astk">*</span>
-                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail" autofocus><i
-                                class="fa-solid fa-user usr"></i>
+                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail" autofocus>
+                            <i class="fa-solid fa-user"></i> <!-- Added fa-user class for static person icon -->
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password</label>
-                            <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd"><i id="pwd"
-                                class="fa-solid sign fa-eye-slash"></i>
+                            <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd">
+                            <i id="pwd" class="fa-solid sign fa-eye-slash"></i> <!-- Kept the fa-solid class for eye/eye-slash toggle -->
                         </div>
                         <div class="mb-3">
                             <span class="me-2"> Date of signup</span>
@@ -318,13 +318,13 @@
                     <form>
                         <div class="mb-2">
                             <label for="emaillog" class="form-label">Email address</label><br>
-                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog"
-                                name="emaillog"><i class="fa-solid fa-user"></i>
+                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" name="emaillog">
+                            <i class="fa-solid fa-user"></i> <!-- Added fa-user class for static person icon -->
                         </div>
                         <div class="mb-3">
                             <label for="pwdlog" class="form-label">Password</label><br>
-                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog"
-                                name="pwdlog"><i class="fa-solid fa-eye-slash"></i>
+                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog" name="pwdlog">
+                            <i class="fa-solid fa-eye-slash"></i> <!-- Kept the fa-solid class for eye/eye-slash toggle -->
                         </div>
                         <div class="mb-3">
                             <a data-bs-toggle="modal" data-bs-target="#forgot" id="fgt" class="mt-2">Forgot Password?</a>
@@ -341,7 +341,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 offset-md-4" id="exampleModalLabel">Reset Password</h1>
+                    <h1>class="modal-title fs-5 offset-md-4" id="exampleModalLabel">Reset Password</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
