@@ -1,0 +1,10 @@
+## the Dotenv file should contain these following variables and their values -> 
+
+DB_HOST= ..
+DB_USER= ..
+DB_PASSWORD= ..
+DB_DATABASE= ..
+
+EMAIL_USER = ..
+EMAIL_PASSWORD = ..
+
