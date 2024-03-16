@@ -7,13 +7,11 @@
 }
 
 .wrapper{
-  background-color: green;
   margin-top: 10%;
-
 }
 
 .wrapper h1{
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 50px;
   margin-bottom: 60px;
   text-align: center;
@@ -28,13 +26,13 @@
 }
 
 .team .team_member{
-  background: #fff;
+  background: #dcd8d8;
   margin: 5px;
   margin-bottom: 50px;
   width: 300px;
   padding: 20px;
   line-height: 20px;
-  color: #9b9595;  
+  color: #060606;  
   position: relative;
 }
 
