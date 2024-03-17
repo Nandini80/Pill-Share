@@ -13,7 +13,7 @@
 .wrapper h1{
   color: rgb(0, 0, 0);
   font-size: 50px;
-  margin-bottom: 60px;
+  margin-bottom: 0px;
   text-align: center;
 }
 
@@ -27,8 +27,8 @@
 
 .team .team_member{
   background: #dcd8d8;
-  margin: 5px;
-  margin-bottom: 50px;
+  margin: 120px;
+  margin-bottom: 40px;
   width: 300px;
   padding: 20px;
   line-height: 20px;
@@ -38,14 +38,14 @@
 
 .team .team_member h3{
   color: #81c644;
-  font-size: 30px;
+  font-size: 20px;
   margin-top: 50px;
 }
 
 .team .team_member p.role{
   color: #000000;
-  margin: 12px 0;
-  font-size: 15px;
+  margin: 15px 0;
+  font-size: 20px;
   text-transform: uppercase;
   font-weight: bold;
 }
