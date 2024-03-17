@@ -18,34 +18,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<script>
-        //==================After clicking Login button======================== 
-        $("#btnloginsub").click(function () {
-            var emailKu = $("#emaillog").val();
-            var pwdKu = $("#pwdlog").val();
-            var obj = {
-                type: "get",
-                url: "/login-ajax",
-                data: {
-                    eml: emailKu,
-                    pd: pwdKu
-                }
-            }
-            $.ajax(obj).done(function (respKuch) {
-                localStorage.setItem("activeK", $("#emaillog").val()); // For Email by default in inputText
-                if (respKuch == "Donor")
-                    location.href = "dash-donor.html";
-                else {
-                    if (respKuch == "Needy")
-                        location.href = "dash-needy.html";
-
-                    else
-                        alert(JSON.stringify(respKuch));
-                }
-            }).fail(function (err) {
-                alert(err);
-            });
-        });
+<script> 
+    $(document).ready(function () {
         //=================================Otp send button=========================
         var otpSent;
         $("#otp").click(function () {
@@ -223,12 +197,14 @@
                         <a class="nav-link" href="temsAndConditions.html">Terms and Conditions</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex" role="search" id="user-controls">
                     <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-3" data-bs-toggle="modal"
-                        data-bs-target="#modalsign">SignUp</button>
+                            data-bs-target="#modalsign">SignUp</button>
                     <button type="button" id="btnlogin" class="btn btn-outline-success mt-3" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">Login</button>
-                </form>
+                            data-bs-target="#exampleModal">Login</button>
+                    <button type="button" class="btn btn-outline-danger mt-3" id="logoutBtn" style="display: none;">Logout</button>
+                  </form>
+                  
             </div>
         </div>
     </nav>
@@ -290,7 +266,7 @@
                     <img src="pics_used/profile_needy_img.jpg" style="width: 135px; height: 135px;">
                 </div>
                 <div class="modal-body">
-                    <form id="loginForm" method="get" onsubmit="handleFormSubmit(event)">
+                    <form id="loginForm" method="get" onsubmit="handleLoginSubmit(event)">
                         <div class="mb-2">
                             <label for="emaillog" class="form-label">Email address</label><br>
                             <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" required name="emaillog">
@@ -526,5 +502,71 @@
     $("#result").html(error);
   });
 } 
+    function submitLoginForm(event) {
+        
+    event.preventDefault(); // Prevent default form submission
+
+    // Access form elements using event.target
+    const email = event.target.elements['emaillog'].value;
+    const password = event.target.elements['pwdlog'].value; 
+
+  // Prepare data object
+  const data = {
+    emailK: email,
+    pwdK: password, 
+  };
+
+
+  // Send AJAX request
+  $.ajax({
+    type: "GET", // Adjust method if needed (e.g., "POST")
+    url: "/login-ajax", // Replace with your actual URL
+    data: data,
+  })
+  .done(function (response) {
+    localStorage.setItem("activeK", email); // Store email in localStorage
+    if (response === "Donor") {
+      location.href = "./dash-donor.html";
+    } else if (response === "Needy") {
+      location.href = "./dash-needy.html";
+    } else {
+      alert(response); // Display response message
+    }
+  })
+  .fail(function (error) {
+    alert(error); // Display error message
+  });
+} 
+
+ 
+const userControls = document.getElementById('user-controls');
+const logoutBtn = document.getElementById('logoutBtn');
+
+// Check for logged-in user on page load
+checkLoggedInUser();
+
+function checkLoggedInUser() {
+  const activeK = localStorage.getItem('activeK');
+  if (activeK) {
+    loggedIn();
+  } else {
+    // logout();
+  }
+}
+
+function loggedIn() {
+  logoutBtn.style.display = 'block';
+  userControls.removeChild(document.getElementById('btnsign'));
+  userControls.removeChild(document.getElementById('btnlogin')); 
+  logoutBtn.addEventListener('click', function() {
+    logout();
+  });
+}
+
+function logout() {
+  logoutBtn.style.display = 'none';
+      localStorage.removeItem("activeK");
+      location.replace("/index.html");
+      return; }
 </script>
 </html>
