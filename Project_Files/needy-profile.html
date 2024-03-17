@@ -83,7 +83,7 @@
         </div>
         <div class="col-md-5 offset-md-3 mt-2">
           <label for="txtEmail" class="form-label mt-3">Email</label>
-          <input type="email" name="txtEmail" id="txtEmail" placeholder="Email Address" class="form-control">
+          <input type="email" name="txtEmail" id="txtEmail" placeholder="Email Address" class="form-control" required>
         </div>
         <div class="col-md-2 mt-5 mb-4">
           <input type="button" id="btnFetch" class="btn btn-primary mt-2" value="Fetch">
@@ -92,16 +92,16 @@
           &nbsp;&nbsp;
           Name
           <input type="text" id="txtName" name="txtName" placeholder="Name"
-            class="form-control ms-2 mt-2" aria-label="First name">
+            class="form-control ms-2 mt-2" aria-label="First name" required>
         </div>
         <div class="col-md-3 ms-1">
           <label for="txtNum" class="form-label ms-1"> Mobile Number</label>
           <input type="text" name="txtNum" class="form-control" id="txtNum" maxlength="10"
-            placeholder="Mobile Number">
+            placeholder="Mobile Number" required>
         </div>
         <div class="col-md-3 ms-1">
           <label class="form-label">Gender</label>
-          <select class="form-select" name="gender" id="gender" aria-label="Default select example">
+          <select class="form-select" name="gender" id="gender" aria-label="Default select example" required>
             <option selected>Select</option>
             <option value="M">Male</option>
             <option value="F">Female</option>
@@ -112,17 +112,17 @@
       <div class="col-md-9 offset-md-1 mt-3">
         <label for="txtAdd" class="form-label">Address</label>
         <input type="text" name="txtAdd" class="form-control" id="txtAdd1"
-          placeholder="Apartment, studio, or floor address 1">
+          placeholder="Apartment, studio, or floor address 1" required>
       </div>
       <div class="row">
         <div class="col-md-3 offset-md-1 mt-3">
           <label for="txtCity" class="form-label">City</label>
-          <input type="text" name="txtCity" class="form-control" id="txtCity" placeholder="City">
+          <input type="text" name="txtCity" class="form-control" id="txtCity" placeholder="City" required>
         </div>
         <!-- placeholder=name -->
         <div class="col-md-3 mt-3 mb-3 ms-2">
           <label for="txtState" class="form-label">State</label>
-          <input list="mylist" id="txtState" name="txtState" class="form-control" placeholder="State">
+          <input list="mylist" id="txtState" name="txtState" class="form-control" placeholder="State" required>
           <datalist id="mylist">
             <option selected>Choose...</option>
             <option value="Punjab">Pub</option>
@@ -135,13 +135,13 @@
           <div class="ms-1 mb-2">
             Date of Birth
           </div>
-          <input type="date" id="dob" name="dob" class="form-control">
+          <input type="date" id="dob" name="dob" class="form-control" required>
         </div>
       </div>
       <div class="row">
         <div class="col-md-3 offset-md-1 mt-3 me-5">
           <label class="form-label">ID Proof</label>
-          <select class="form-select" id="proof" name="proof" aria-label="Default select example">
+          <select class="form-select" id="proof" name="proof" aria-label="Default select example" required>
             <option selected>Select</option>
             <option value="aadhaar">Aadhaar Card</option>
             <option value="drive">Driving license</option>

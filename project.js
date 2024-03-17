@@ -3,6 +3,8 @@ var app = express();
 var fileuploader = require("express-fileupload");
 var mysql = require("mysql2");
 var nodemailer = require('nodemailer');
+require('dotenv').config();
+
 app.listen(2023, function () {
     console.log("server starteddd!!!!!!!!!!");
 });
@@ -25,10 +27,10 @@ app.get("/", function (req, resp) {
 // };
 
 var dbConfig = {
-    host : "bk0ionmurhfxi1puzbyj-mysql.services.clever-cloud.com",
-    user : "ucdsavpfy5razlfq",
-    password : "UsyWuk7YAcE8rFXUTJGT",
-    database: "bk0ionmurhfxi1puzbyj",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     dateStrings : true
 }
 
@@ -47,8 +49,8 @@ dbRef.connect(function (err) {
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'nandinijindal010@gmail.com',
-      pass: 'sbthzqsvmghfpbkl'
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
     }
   });
 // ================Index page Sign Up==========================================
@@ -89,8 +91,8 @@ app.get("/nodemail",function(req,resp){
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'nandinijindal010@gmail.com',
-          pass: 'sbthzqsvmghfpbkl'
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD
         }
       });
       
