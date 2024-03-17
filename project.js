@@ -19,7 +19,7 @@ app.get("/", function (req, resp) {
 
 //Connect to sql
 // var dbConfig = {
-//     host: "127.0.0.1",,
+//     host: "127.0.0.1",
 //     user: "root",
 //     password: "test",
 //     database: "bce",
