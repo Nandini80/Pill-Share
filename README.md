@@ -26,7 +26,7 @@ Pill Share is more than just a platform; it's a community-driven initiative aime
 
 If you're passionate about improving healthcare accessibility and want to contribute to our cause, we welcome your involvement! Whether through donations, volunteering, spreading awareness, or contributing to the development of our platform, your efforts can make a significant difference.
 
-### Technologies
+## Technologies
 
 - HTML
 - CSS
@@ -37,7 +37,7 @@ If you're passionate about improving healthcare accessibility and want to contri
 - AngularJS
 - MySQL
 
-### Project Setup
+## Project Setup
 
 Clone the project
 
