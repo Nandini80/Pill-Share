@@ -1,4 +1,4 @@
-# Pill Share
+<h1 align="center"> Pill Share </h1>
 
 Pill Share is a platform dedicated to facilitating the donation and exchange of surplus medications, connecting donors with individuals in need. Our mission is to make healthcare more accessible and affordable, particularly in regions with limited access to essential medications.
 
@@ -9,7 +9,7 @@ Pill Share is a platform dedicated to facilitating the donation and exchange of 
 - [Get Involved](#get-involved)
 - [Technologies](#technologies)
 - [Project Setup](#project-setup)
-- [Contributions](#contributions)
+- [Contribution](#contribution)
 
 
 ## About Pill Share
