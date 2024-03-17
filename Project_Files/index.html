@@ -19,31 +19,6 @@
 </head>
 
 <script>
-    $(document).ready(function () {
-        //=================Sign-Up script on submit clcik=======================
-        $("#show").click(function () {
-            var emailKuch = $("#txtEmail").val();
-            var pwdKuch = $("#txtPwd").val();
-            var optKuch = $("#type").val();
-            var obj = {
-                type: "get",
-                url: "/ajax-signup",
-                data: {
-                    emailK: emailKuch,
-                    pwdK: pwdKuch,
-                    optK: optKuch
-                }
-            }
-            $.ajax(obj).done(function (respKuch) {
-                //  alert(JSON.stringify(respKuch));
-                $("#result").html(respKuch);
-            }).fail(function (errKuch) {
-                //   alert(JSON.stringify(errKuch));
-                $("#result").html(errKuch);
-            })
-
-        });
-
         //==================After clicking Login button======================== 
         $("#btnloginsub").click(function () {
             var emailKu = $("#emaillog").val();
@@ -267,7 +242,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form  id="signupForm" method="get" onsubmit="submitSignupForm(event)">
                         <div class="mb-1">
                             <center>
                                 <img src="pics_used/userlogin.png" style="width: 80px;height: 80px;">
@@ -276,8 +251,7 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <span id="astk">*</span>
-                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail"
-                            pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" autofocus required>
+                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail"  autofocus required>
                             <i class="fa-solid fa-user"></i> 
                         </div>
                         <div class="mb-3">
@@ -316,7 +290,7 @@
                     <img src="pics_used/profile_needy_img.jpg" style="width: 135px; height: 135px;">
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="loginForm" method="get" onsubmit="handleFormSubmit(event)">
                         <div class="mb-2">
                             <label for="emaillog" class="form-label">Email address</label><br>
                             <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" required name="emaillog">
@@ -522,5 +496,35 @@
 
 
 </body>
+<script>
+    function submitSignupForm(event) {
+        
+    event.preventDefault(); // Prevent default form submission
 
+    // Access form elements using event.target
+    const email = event.target.elements['txtEmail'].value;
+    const password = event.target.elements['txtPwd'].value;
+    const type = event.target.elements['type'].value;
+
+  // Prepare data object
+  const data = {
+    emailK: email,
+    pwdK: password,
+    optK: type,
+  };
+
+  // Send AJAX request
+  $.ajax({
+    type: "GET", // Adjust method if needed (e.g., "POST")
+    url: "/ajax-signup", // Replace with your actual URL
+    data: data,
+  })
+  .done(function (response) {
+    $("#result").html(response);
+  })
+  .fail(function (error) {
+    $("#result").html(error);
+  });
+} 
+</script>
 </html>
