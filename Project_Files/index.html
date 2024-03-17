@@ -276,18 +276,18 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <span id="astk">*</span>
-                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail" autofocus>
+                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail"
+                            pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" autofocus required>
                             <i class="fa-solid fa-user"></i> 
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password</label>
-                            <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd">
+                            <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd" required>
                             <i id="pwd" class="fa-solid sign fa-eye-slash"></i> 
                         </div>
                         <div class="mb-3">
                             <span class="me-2"> Date of signup</span>
-                            <input type="date"
-                                style="border-radius: 7px 7px 7px 7px;padding: 4px 4px 4px 4px;width: 130px;border-color:lightcyan">
+                            <input type="date" style="border-radius: 7px 7px 7px 7px;padding: 4px 4px 4px 4px;width: 130px;border-color:lightcyan" required >
                         </div>
                         <div class="mb-3 dropdown">
                             <select class="btn btn-outline-success" id="type">
@@ -295,7 +295,7 @@
                                 <option style="background-color: white;color: black;" value="Needy">Needy</option>
                             </select>
                         </div>
-                        <button type="button" id="show" class="btn btn-primary offset-md-5">Submit</button>
+                        <input type="submit" id="show" class="btn btn-primary offset-md-5"></input>
                         <span id="result"></span>
                         </center>
                     </form>
@@ -319,18 +319,18 @@
                     <form>
                         <div class="mb-2">
                             <label for="emaillog" class="form-label">Email address</label><br>
-                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" name="emaillog">
+                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" required name="emaillog">
                             <i class="fa-solid fa-user"></i> <!-- Added fa-user class for static person icon -->
                         </div>
                         <div class="mb-3">
                             <label for="pwdlog" class="form-label">Password</label><br>
-                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog" name="pwdlog">
+                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog"required name="pwdlog">
                             <i class="fa-solid fa-eye-slash"></i> <!-- Kept the fa-solid class for eye/eye-slash toggle -->
                         </div>
                         <div class="mb-3">
                             <a data-bs-toggle="modal" data-bs-target="#forgot" id="fgt" class="mt-2">Forgot Password?</a>
                         </div>
-                        <button type="button" class="btn btn-primary offset-md-5" id="btnloginsub">LOGIN</button>
+                        <input type="submit" class="btn btn-primary offset-md-5" id="btnloginsub" value="Login"></button>
                     </form>
 
                 </div>
@@ -359,15 +359,15 @@
                                 <div class="mb-2 mt-1">
                                     <span class="col-md-4">Enter Your Email Address here</span>
                                     <input type="email" class="border col-md-9 mt-2 p-2 rounded" id="emailfgt"
-                                        placeholder="Email Address" name="emaillog">
-                                    <button type="button" class="btn btn-primary ms-1 mb-2" id="otp">Send OTP</button>
+                                        placeholder="Email Address" name="emaillog"required>
+                                    <input="submit" class="btn btn-primary ms-1 mb-2" id="otp" value="Send OTP"></button>
                                 </div>
                             </form>
                             <div>
                                 <span class="col-md-4">Enter Your OTP here</span>
                                 <input type="text" class="border col-md-9 p-2 mt-2 rounded" id="txtotp"
-                                    placeholder="Enter OTP" name="txtotp">
-                                <button type="button" class="btn btn-primary ms-3 mb-2" id="otpsub">Submit</button>
+                                    placeholder="Enter OTP" name="txtotp" required>
+                                <input type="submit" class="btn btn-primary ms-3 mb-2" id="otpsub"></button>
                             </div>
                         </div>
                     </div>
