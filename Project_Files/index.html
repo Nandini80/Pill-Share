@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<script> 
+<script>
     $(document).ready(function () {
         //=================================Otp send button=========================
         var otpSent;
@@ -40,8 +40,7 @@
 
         //======================On click of submit after entering otp==============
         var resp;
-        $("#otpsub").click(function () 
-        { 
+        $("#otpsub").click(function () {
             var otptext = $("#txtotp").val();
             var emailo = $("#emailfgt").val();
             var obj =
@@ -49,59 +48,55 @@
                 type: "get",
                 url: "/click-submit-after-filling-otp",
                 data:
-                    { otptx: otptext,
-                      otpst:  otpSent,
-                      key1 : emailo
-                    }
+                {
+                    otptx: otptext,
+                    otpst: otpSent,
+                    key1: emailo
+                }
             }
-            $.ajax(obj).done(function (respKuch) 
-            {  
-                   resp = respKuch;                 //nandinijindal41@gmail.com
-                   doOpen();
+            $.ajax(obj).done(function (respKuch) {
+                resp = respKuch;                 //nandinijindal41@gmail.com
+                doOpen();
                 //  alert(JSON.stringify(respKuch));
             }).fail(function (errKuch) {
-                  alert(JSON.stringify(errKuch));
+                alert(JSON.stringify(errKuch));
                 // $("#result").html(errKuch);
             })
         });
 
         //=======================Reset of password ===============================
-        $("#updpwd").click(function(){
+        $("#updpwd").click(function () {
             var emailo = $("#emailfgt").val();
             var newpwd = $("#newpwd").val();
             var conpwd = $("#compwd").val();
 
-            var obj={
-                type:"get",
+            var obj = {
+                type: "get",
                 url: "/reset-pwd-in-login",
-                data:{
-                    eml : emailo,
-                    np : newpwd,
-                    cp : conpwd
+                data: {
+                    eml: emailo,
+                    np: newpwd,
+                    cp: conpwd
                 }
             }
-            $.ajax(obj).done(function(resp)
-            {
-              $("#space").html(resp);
-            }).fail(function(err){
-              $("#space").html(err);
+            $.ajax(obj).done(function (resp) {
+                $("#space").html(resp);
+            }).fail(function (err) {
+                $("#space").html(err);
             });
         });
 
 
         //======================
-        function doOpen()
-        {
-          alert(resp);
-          if(resp=="Invalid OTP")
-          {
-            $("#forgot").modal('show');
-          }
-          else
-          {
-            $("#Modal").modal('show');
-            $("#forgot").modal('hide');
-          }
+        function doOpen() {
+            alert(resp);
+            if (resp == "Invalid OTP") {
+                $("#forgot").modal('show');
+            }
+            else {
+                $("#Modal").modal('show');
+                $("#forgot").modal('hide');
+            }
         }
         //======================Email in signup valid or not ======================
         $("#txtEmail").blur(function () {
@@ -199,12 +194,13 @@
                 </ul>
                 <form class="d-flex" role="search" id="user-controls">
                     <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-3" data-bs-toggle="modal"
-                            data-bs-target="#modalsign">SignUp</button>
+                        data-bs-target="#modalsign">SignUp</button>
                     <button type="button" id="btnlogin" class="btn btn-outline-success mt-3" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">Login</button>
-                    <button type="button" class="btn btn-outline-danger mt-3" id="logoutBtn" style="display: none;">Logout</button>
-                  </form>
-                  
+                        data-bs-target="#exampleModal">Login</button>
+                    <button type="button" class="btn btn-outline-danger mt-3" id="logoutBtn"
+                        style="display: none;">Logout</button>
+                </form>
+
             </div>
         </div>
     </nav>
@@ -218,7 +214,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form  id="signupForm" method="get" onsubmit="submitSignupForm(event)">
+                    <form id="signupForm" method="post" onsubmit="submitSignupForm(event)">
                         <div class="mb-1">
                             <center>
                                 <img src="pics_used/userlogin.png" style="width: 80px;height: 80px;">
@@ -227,17 +223,20 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <span id="astk">*</span>
-                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail"  autofocus required>
-                            <i class="fa-solid fa-user"></i> 
+                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail" autofocus
+                                required>
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password</label>
                             <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd" required>
-                            <i id="pwd" class="fa-solid sign fa-eye-slash"></i> 
+                            <i id="pwd" class="fa-solid sign fa-eye-slash"></i>
                         </div>
                         <div class="mb-3">
                             <span class="me-2"> Date of signup</span>
-                            <input type="date" style="border-radius: 7px 7px 7px 7px;padding: 4px 4px 4px 4px;width: 130px;border-color:lightcyan" required >
+                            <input type="date"
+                                style="border-radius: 7px 7px 7px 7px;padding: 4px 4px 4px 4px;width: 130px;border-color:lightcyan"
+                                required>
                         </div>
                         <div class="mb-3 dropdown">
                             <select class="btn btn-outline-success" id="type">
@@ -266,21 +265,26 @@
                     <img src="pics_used/profile_needy_img.jpg" style="width: 135px; height: 135px;">
                 </div>
                 <div class="modal-body">
-                    <form id="loginForm" method="get" onsubmit="handleLoginSubmit(event)">
+                    <form id="loginForm" method="post" onsubmit="submitLoginForm(event)">
                         <div class="mb-2">
                             <label for="emaillog" class="form-label">Email address</label><br>
-                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" required name="emaillog">
+                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" required
+                                name="emaillog">
                             <i class="fa-solid fa-user"></i> <!-- Added fa-user class for static person icon -->
                         </div>
                         <div class="mb-3">
                             <label for="pwdlog" class="form-label">Password</label><br>
-                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog"required name="pwdlog">
-                            <i class="fa-solid fa-eye-slash"></i> <!-- Kept the fa-solid class for eye/eye-slash toggle -->
+                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog"
+                                required name="pwdlog">
+                            <i class="fa-solid fa-eye-slash"></i>
+                            <!-- Kept the fa-solid class for eye/eye-slash toggle -->
                         </div>
                         <div class="mb-3">
-                            <a data-bs-toggle="modal" data-bs-target="#forgot" id="fgt" class="mt-2">Forgot Password?</a>
+                            <a data-bs-toggle="modal" data-bs-target="#forgot" id="fgt" class="mt-2">Forgot
+                                Password?</a>
                         </div>
-                        <input type="submit" class="btn btn-primary offset-md-5" id="btnloginsub" value="Login"></button>
+                        <input type="submit" class="btn btn-primary offset-md-5" id="btnloginsub"
+                            value="Login"></button>
                     </form>
 
                 </div>
@@ -309,8 +313,9 @@
                                 <div class="mb-2 mt-1">
                                     <span class="col-md-4">Enter Your Email Address here</span>
                                     <input type="email" class="border col-md-9 mt-2 p-2 rounded" id="emailfgt"
-                                        placeholder="Email Address" name="emaillog"required>
-                                    <input="submit" class="btn btn-primary ms-1 mb-2" id="otp" value="Send OTP"></button>
+                                        placeholder="Email Address" name="emaillog" required>
+                                    <input="submit" class="btn btn-primary ms-1 mb-2" id="otp" value="Send OTP">
+                                        </button>
                                 </div>
                             </form>
                             <div>
@@ -445,128 +450,145 @@
         <br>
         <h1 class="about1">About Us</h1>
         <div class="team">
-          <div class="team_member">
-            <div class="team_img">
-              <img src="pics_used/mine2.jpeg" alt="Team_image">
+            <div class="team_member">
+                <div class="team_img">
+                    <img src="pics_used/mine2.jpeg" alt="Team_image">
+                </div>
+                <h3>Nandini Jindal</h3>
+                <p class="role">Developed By</p>
+                <p>Hi there, I am <b>Nandini Jindal</b> the founder of this website. Currently persuing Btech from
+                    Jaypee institue of technology, Noida in Computer science branch. I am very happy to introduce you my
+                    very first website <b>PiLLshArE</b></p>
             </div>
-            <h3>Nandini Jindal</h3>
-            <p class="role">Developed By</p>
-            <p>Hi there, I am <b>Nandini Jindal</b> the founder of this website. Currently persuing Btech from Jaypee institue of technology, Noida in Computer science branch. I am very happy to introduce you my very first website <b>PiLLshArE</b></p>
-          </div>
-          <div class="team_member">
-            <div class="team_img">
-              <img src="pics_used/sir.jpeg" alt="Team_image">
+            <div class="team_member">
+                <div class="team_img">
+                    <img src="pics_used/sir.jpeg" alt="Team_image">
+                </div>
+                <h3>Mr.Rajesh Bansal</h3>
+                <p class="role">Under The Guidance of</p>
+                <p>I am able to Develop this site only because of my sir, <b>Mr.Rajesh Bansal</b> (the author of REAL
+                    JAVA). He helped me in every aspect. He is the Brain of this Website. Thankyou sir for all your
+                    Guidance and support.</p>
             </div>
-            <h3>Mr.Rajesh Bansal</h3>
-            <p class="role">Under The Guidance of</p>
-            <p>I am able to Develop this site only because of my sir, <b>Mr.Rajesh Bansal</b> (the author of REAL JAVA). He helped me in every aspect. He is the Brain of this Website. Thankyou sir for all your Guidance and support.</p>
-          </div>
         </div>
-      </div>	
-      
-    </div><div class="text-center fs-3 mb-1" id="contact" style="font-weight: 700;">
+    </div>
+
+    </div>
+    <div class="text-center fs-3 mb-1" id="contact" style="font-weight: 700;">
         Contact Us at nandinijindal010@gmail.com
     </div>
-</div>
+    </div>
 
 
 
 </body>
 <script>
-    function submitSignupForm(event) {
-        
+function submitSignupForm(event) {
     event.preventDefault(); // Prevent default form submission
-
-    // Access form elements using event.target
+  
+    // Access form elements
     const email = event.target.elements['txtEmail'].value;
     const password = event.target.elements['txtPwd'].value;
     const type = event.target.elements['type'].value;
-
-  // Prepare data object
-  const data = {
-    emailK: email,
-    pwdK: password,
-    optK: type,
-  };
-
-  // Send AJAX request
-  $.ajax({
-    type: "GET", // Adjust method if needed (e.g., "POST")
-    url: "/ajax-signup", // Replace with your actual URL
-    data: data,
-  })
-  .done(function (response) {
-    $("#result").html(response);
-  })
-  .fail(function (error) {
-    $("#result").html(error);
-  });
-} 
-    function submitLoginForm(event) {
-        
-    event.preventDefault(); // Prevent default form submission
-
-    // Access form elements using event.target
-    const email = event.target.elements['emaillog'].value;
-    const password = event.target.elements['pwdlog'].value; 
-
-  // Prepare data object
-  const data = {
-    emailK: email,
-    pwdK: password, 
-  };
-
-
-  // Send AJAX request
-  $.ajax({
-    type: "GET", // Adjust method if needed (e.g., "POST")
-    url: "/login-ajax", // Replace with your actual URL
-    data: data,
-  })
-  .done(function (response) {
-    localStorage.setItem("activeK", email); // Store email in localStorage
-    if (response === "Donor") {
-      location.href = "./dash-donor.html";
-    } else if (response === "Needy") {
-      location.href = "./dash-needy.html";
-    } else {
-      alert(response); // Display response message
-    }
-  })
-  .fail(function (error) {
-    alert(error); // Display error message
-  });
-} 
-
- 
-const userControls = document.getElementById('user-controls');
-const logoutBtn = document.getElementById('logoutBtn');
-
-// Check for logged-in user on page load
-checkLoggedInUser();
-
-function checkLoggedInUser() {
-  const activeK = localStorage.getItem('activeK');
-  if (activeK) {
-    loggedIn();
-  } else {
-    // logout();
+  
+    // Prepare data object
+    const data = {
+      emailK: email,
+      pwdK: password,
+      optK: type
+    };
+  
+    // Send fetch request (replace with URL from backend)
+    fetch('/signup', {
+      method: 'POST', // Use POST for creating data
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message === 'success') { 
+        if (type === "Donor") {
+            location.href = "./dash-donor.html";
+        } else if (type === "Needy") {
+            location.href = "./dash-needy.html";
+        } 
+      } else if (data.message === 'email_exists') {
+        alert('Email already exists. Please try a different email.');
+      } else {
+        console.warn('Signup failed: ' + data.message); // Handle other errors
+      }
+    })
+    .catch(error => {
+      alert('An error occurred during signup: ' + error); // Display error message
+    });
   }
-}
+    function submitLoginForm(event) {
 
-function loggedIn() {
-  logoutBtn.style.display = 'block';
-  userControls.removeChild(document.getElementById('btnsign'));
-  userControls.removeChild(document.getElementById('btnlogin')); 
-  logoutBtn.addEventListener('click', function() {
-    logout();
-  });
-}
+        event.preventDefault(); // Prevent default form submission
 
-function logout() {
-  logoutBtn.style.display = 'none';
-      localStorage.removeItem("activeK");
-      location.replace("/index.html");
-      return; }
+        // Access form elements using event.target
+        const email = event.target.elements['emaillog'].value;
+        const password = event.target.elements['pwdlog'].value;
+
+        // Prepare data object
+        const data = {
+            emailK: email,
+            pwdK: password,
+        };
+        fetch('/login', {
+            method: 'POST',
+            body: JSON.stringify({ email: yourEmail, password: yourPassword })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    if (data === "Donor") {
+                        location.href = "./dash-donor.html";
+                    } else if (data === "Needy") {
+                        location.href = "./dash-needy.html";
+                    } else {
+                        alert(data);
+                    }
+                } else {
+                    alert('Login failed. Please check your credentials.');
+                }
+            })
+            .catch(error => {
+                alert('An error occurred during login: ' + error);
+            });
+    }
+
+
+    const userControls = document.getElementById('user-controls');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Check for logged-in user on page load
+    checkLoggedInUser();
+
+    function checkLoggedInUser() {
+        const activeK = localStorage.getItem('activeK');
+        if (activeK) {
+            loggedIn();
+        } else {
+            // logout();
+        }
+    }
+
+    function loggedIn() {
+        logoutBtn.style.display = 'block';
+        userControls.removeChild(document.getElementById('btnsign'));
+        userControls.removeChild(document.getElementById('btnlogin'));
+        logoutBtn.addEventListener('click', function () {
+            logout();
+        });
+    }
+
+    function logout() {
+        logoutBtn.style.display = 'none';
+        localStorage.removeItem("activeK");
+        location.replace("/index.html");
+        return;
+    }
 </script>
+
 </html>
