@@ -42,7 +42,7 @@ If you're passionate about improving healthcare accessibility and want to contri
 Clone the project
 
 ```bash
-  git clone <-https://link-to-project->
+  git clone https://link-to-project
 ```
 
 Go to the project directory
