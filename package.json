@@ -4,8 +4,9 @@
   "description": "",
   "main": "project.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1", 
-    "start": "nodemon project.js"  
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon project.js",
+    "build": "node project.js"   
   },
   "keywords": [],
   "author": "",

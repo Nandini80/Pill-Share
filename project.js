@@ -102,8 +102,12 @@ app.post("/signup", (req, res) => {
             if (err.code === "ER_DUP_ENTRY") {
               return res.status(409).send({ message: "email_exists" });
             }
-            return res.status(500).send({ message: err.toString() });
+            else{
+              return res.status(500).send({ message: err.toString() });
+            }
           }
+          else{
+ 
           // req.session.user = { email: emailK, type: optK };
           req.session.email = emailK;
           req.session.type = optK;
@@ -124,11 +128,11 @@ app.post("/signup", (req, res) => {
                 .status(500)
                 .send({ message: "Signup successful (email sending failed)" });
             } else {
-              console.log("Email sent:", info.response);
-
+              console.log("Email sent:", info.response); 
               res.send({ message: "success", type: optK });
             }
           });
+        }
         }
       );
     });
@@ -427,53 +431,28 @@ app.post("/ajax-avail-med", function (req, resp) {
 
 //==============================Donor settings==============================
 app.post("/donor-settings-update-pwd", function (req, resp) {
-  var newpwd = req.query.np;
-  var oldpwd = req.query.op;
-  var compwd = req.query.cp;
+  var newpwd = req.body.np;
+  var oldpwd = req.body.op;
+  var compwd = req.body.cp;
 
   if (newpwd != oldpwd) {
     if (newpwd == compwd) {
-
       dbRef.query(
-        "select type,status,pwd from coustomers where email=?",
-        [email],
-        (err, resultJsonArray) => {
-          if (err) {
-            res.status(500).send({ message: err.toString() });
-          }
-          if (!resultJsonArray || resultJsonArray.length === 0) {
-            res
-              .status(401)
-              .send({ message: "Invalid email/password", pass: false }); // Or a more specific message
-          } else {
-            hashed_password = resultJsonArray[0].pwd;
-            const verified = bcrypt.compare(oldpwd, hashed_password);
-            if (!verified) {
-              res
-                .status(401)
-                .send({ message: "Invalid email/password", pass: false }); // Unauthorized (invalid credentials)
+        "update coustomers set pwd=? where email=? and pwd=?",
+        [req.query.np, req.query.email, req.query.op],
+        function (err, result) {
+          if (err == null) {
+            if (result.affectedRows == 0) {
+              console.log(result.affectedRows);
+              resp.send("Invalid password");
             } else {
-              dbRef.query(
-                "update coustomers set pwd=? where email=?",
-                [req.query.np, req.query.email],
-                function (err, result) {
-                  if (err == null) {
-                    if (result.affectedRows == 0) {
-                      console.log(result.affectedRows);
-                      resp.send("Invalid password");
-                    } else {
-                      resp.send("Updated successfullyyy");
-                    }
-                  } else {
-                    resp.send(err);
-                  }
-                }
-              );
+              resp.send("Updated successfullyyy");
             }
+          } else {
+            resp.send(err);
           }
         }
       );
-
     } else {
       resp.send("NewPwd==ConfirmPwd");
     }
@@ -567,56 +546,33 @@ app.post("/profile-needy-update", function (req, resp) {
     }
   );
 });
-
+ 
 //===================================Needy settings==============================
-app.post("/needy-settings-update-pwd", function (req, resp) {
+app.get("/needy-settings-update-pwd", function (req, resp) { 
   var newpwd = req.query.np;
   var oldpwd = req.query.op;
-  var compwd = req.query.cp;
+  var compwd = req.query.cp;    
+  console.log(oldpwd)
+  console.log(newpwd) 
 
   if (newpwd != oldpwd) {
     if (newpwd == compwd) {
-
       dbRef.query(
-        "select type,status,pwd from coustomers where email=?",
-        [email],
-        (err, resultJsonArray) => {
-          if (err) {
-            res.status(500).send({ message: err.toString() });
-          }
-          if (!resultJsonArray || resultJsonArray.length === 0) {
-            res
-              .status(401)
-              .send({ message: "Invalid email/password", pass: false }); // Or a more specific message
-          } else {
-            hashed_password = resultJsonArray[0].pwd;
-            const verified = bcrypt.compare(oldpwd, hashed_password);
-            if (!verified) {
-              res
-                .status(401)
-                .send({ message: "Invalid email/password", pass: false }); // Unauthorized (invalid credentials)
+        "update coustomers set pwd=? where email=? and pwd=?",
+        [req.query.np, req.query.email, req.query.op],
+        function (err, result) {
+          if (err == null) {
+            if (result.affectedRows == 0) {
+              console.log(result.affectedRows);
+              resp.send("Invalid password");
             } else {
-              dbRef.query(
-                "update coustomers set pwd=? where email=?",
-                [req.query.np, req.query.email],
-                function (err, result) {
-                  if (err == null) {
-                    if (result.affectedRows == 0) {
-                      console.log(result.affectedRows);
-                      resp.send("Invalid password");
-                    } else {
-                      resp.send("Updated successfullyyy");
-                    }
-                  } else {
-                    resp.send(err);
-                  }
-                }
-              );
+              resp.send("Updated successfullyyy");
             }
+          } else {
+            resp.send(err);
           }
         }
       );
-
     } else {
       resp.send("NewPwd==ConfirmPwd");
     }
