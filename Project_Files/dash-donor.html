@@ -111,74 +111,75 @@
     crossorigin="anonymous"></script>
 </body>
 
-<script> 
-    $("#btnsetup").click(function () {
-      const emailk = $("#txtEmail").val();
-      const oldpwdk = $("#oldpwd").val();
-      const newpwdk = $("#newpwd").val();
-      const compwdk = $("#compwd").val();
+<script>
+  $("#btnsetup").click(function () {
+    const emailk = $("#txtEmail").val();
+    const oldpwdk = $("#oldpwd").val();
+    const newpwdk = $("#newpwd").val();
+    const compwdk = $("#compwd").val();
 
-      const data = {
-        email: emailk,
-        op: oldpwdk,
-        np: newpwdk,
-        cp: compwdk
-      };
+    const data = {
+      email: emailk,
+      op: oldpwdk,
+      np: newpwdk,
+      cp: compwdk
+    };
 
-      fetch('/donor-settings-update-pwd', {
-        method: 'POST', // Use POST for updating data
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
+    fetch('/donor-settings-update-pwd', {
+      method: 'POST', // Use POST for updating data
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(response => response.json()) // Parse JSON response (if applicable)
+      .then(data => {
+        $("#ast").html(data); // Update element content
       })
-        .then(response => response.json()) // Parse JSON response (if applicable)
-        .then(data => {
-          $("#ast").html(data); // Update element content
-        })
-        .catch(error => {
-          $("#ast").html('An error occurred: ' + error); // Display error message
-        });
-    });
-    //============================== For Donor Id at top===========================
+      .catch(error => {
+        $("#ast").html('An error occurred: ' + error); // Display error message
+      });
+  });
+  //============================== For Donor Id at top===========================
 
- 
 
-    function checkLoggedInUser() {
-      fetch('/check_user_status', { method: 'POST' })
-        .then(response => response.json())
-        .then(data => {
-          if (data.pass) { 
-            if (data.type=="Needy"){
-              location.href ="./dash-needy.html"
-            }
-            $("#PrintDonor").html(data.email);
-            $("#txtEmail").val(data.email).prop("readonly", true);
-          } else {
-            window.location.href = "index.html";
+
+  function checkLoggedInUser() {
+    fetch('/check_user_status', { method: 'POST' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.pass) {
+          if (data.type == "Needy") {
+            location.href = "./dash-needy.html"
           }
- 
-        })
-    }
+          $("#PrintDonor").html(data.email);
+          $("#txtEmail").val(data.email).prop("readonly", true);
+        } else {
+          window.location.href = "index.html";
+        }
 
-    async function logout() {
-      try {
-          const response = await fetch('/logout', {
-              method: 'POST', 
-          });
+      })
+  }
 
-          if (!response.ok) {
-              throw new Error('Error logging out');
-          }
-          const responseJson = await response.json();
+  async function logout() {
+    try {
+      const response = await fetch('/logout', {
+        method: 'POST',
+      });
 
-          if (responseJson.success) {
-              console.log('Logout successful! Redirecting to login...');
-              window.location.href = '/login';
-          } else {
-              console.error('Logout failed. Check server logs for details.');
-          }
-      } catch (error) {
-          console.error(error);
+      if (!response.ok) {
+        throw new Error('Error logging out');
       }
+      const responseJson = await response.json();
+
+      if (responseJson.success) {
+        console.log('Logout successful! Redirecting to login...');
+        window.location.href = '/login';
+      } else {
+        console.error('Logout failed. Check server logs for details.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }  
 </script>
+
 </html>

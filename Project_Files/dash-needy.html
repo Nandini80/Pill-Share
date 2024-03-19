@@ -38,9 +38,9 @@
       fetch('/check_user_status', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
-          if (data.pass) { 
-            if (data.type=="Donor"){
-              location.href ="./dash-donor.html"
+          if (data.pass) {
+            if (data.type == "Donor") {
+              location.href = "./dash-donor.html"
             }
 
             $("#PrintDonor").html(data.email);
@@ -73,7 +73,7 @@
       } catch (error) {
         console.error(error);
       }
-    }  
+    }
     checkLoggedInUser();
   </script>
 </head>

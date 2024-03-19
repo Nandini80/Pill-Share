@@ -36,7 +36,7 @@ app.use(express.urlencoded(true));
 app.get("/", function (req, resp) {
   resp.send(process.cwd() + "/Project_Files/index.html");
 });
- 
+
 //Connect to sql
 // var dbConfig = {
 //     host: "127.0.0.1",,
@@ -70,7 +70,7 @@ var transporter = nodemailer.createTransport({
 });
 app.post("/check_user_status", (req, res) => {
   if (req.session.email) {
-    console.log(type)
+    console.log(type);
     res.send({
       status: "loggedin",
       email: req.session.email,
@@ -189,9 +189,9 @@ app.post("/logout", (req, res) => {
   });
 });
 //======================Login button Click=======================================
-app.get('/login',(req,res)=>{
-  res.redirect('./index.html')
-})
+app.get("/login", (req, res) => {
+  res.redirect("./index.html");
+});
 app.post("/login", function (req, res) {
   const { email, password } = req.body;
   dbRef.query(
@@ -200,7 +200,7 @@ app.post("/login", function (req, res) {
     (err, resultJsonArray) => {
       if (err) {
         res.status(500).send({ message: err.toString() });
-      } 
+      }
       if (!resultJsonArray || resultJsonArray.length === 0) {
         res
           .status(401)
