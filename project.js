@@ -102,8 +102,12 @@ app.post("/signup", (req, res) => {
             if (err.code === "ER_DUP_ENTRY") {
               return res.status(409).send({ message: "email_exists" });
             }
-            return res.status(500).send({ message: err.toString() });
+            else{
+              return res.status(500).send({ message: err.toString() });
+            }
           }
+          else{
+ 
           // req.session.user = { email: emailK, type: optK };
           req.session.email = emailK;
           req.session.type = optK;
@@ -124,11 +128,11 @@ app.post("/signup", (req, res) => {
                 .status(500)
                 .send({ message: "Signup successful (email sending failed)" });
             } else {
-              console.log("Email sent:", info.response);
-
+              console.log("Email sent:", info.response); 
               res.send({ message: "success", type: optK });
             }
           });
+        }
         }
       );
     });
