@@ -1,8 +1,8 @@
 {
     "version":2,
-    "builds":[{"src":"/project.js","use":"@vercel/node"}],
-    "routes":[{"src":"/.*","dest":"/"}], 
+    "builds":[{"src":"./project.js","use":"@vercel/node"}],
+    "routes":[{"src":"/{.*}","dest":"/"}], 
     "rewrites": [
-        {"source": "/(.*)", "destination": "/"}
+        {"source": "./(.*)", "destination": "./"}
     ]
 }
