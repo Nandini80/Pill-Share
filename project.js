@@ -70,6 +70,9 @@ var transporter = nodemailer.createTransport({
 });
 app.post("/check_user_status", (req, res) => { 
   if (req.session.email) {
+    if (req.session.email=="admin@pillshare.com"){
+      req.session.type="Admin";
+    }
     res.send({
       status: "loggedin", 
       email: req.session.email,
