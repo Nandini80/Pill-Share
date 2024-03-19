@@ -1,93 +1,130 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Medicines Status</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
     <script src="script/angular.min.js"></script>
 
     <script>
-      var module = angular.module("Mymodule",[]);
-      module.controller("Mycontroller",function($scope,$http)
-      {
+      var module = angular.module("Mymodule", []);
+      module.controller("Mycontroller", function ($scope, $http) {
         $scope.jsonArray;
-        $scope.email="";
-        $scope.doShow=function()
-        {
-            var url="/angular-fetch-avail-med?emailk="+$scope.email;
-            $http.get(url).then(done,fail);
-            function done(response)
-            {
-                // alert(JSON.stringify(response.data));
-                $scope.jsonArray=response.data;
-            }
-            function fail(response)
-            {
-                alert(response.data);
-            }
-        }
+        $scope.email = "";
 
-        $scope.doDelete=function(sno)
-        {
-            if(confirm("Is this medicine unavailable?")==false)
-            return;
+        $scope.doShow = function () {
+          var url = "/angular-fetch-avail-med?emailk=" + $scope.email;
 
-            var url="/angular-delete-med?snok="+sno;
-            $http.get(url).then(done,fail);
-            function done(resp)
-            {
-              $scope.doShow();
-            }
-            function fail(resp)
-            {
-              alert(resp.data);
-            }
-            
-        }
-        setActiveUser();
-      function setActiveUser()
-      {
-        if (localStorage.getItem("activeK") == undefined) 
-        {
-          location.href = "index.html";
-          return;
-        }
-        var au = localStorage.getItem("activeK");
-        $scope.email= au;  // For angular provide ng-model
-      }
+          const data = { email: $scope.email };
+
+          fetch(url, {
+            method: "POST",  
+            body: JSON.stringify(data), 
+            headers: { "Content-Type": "application/json" },  
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();  
+            })
+            .then((data) => {
+              console.log("Successful response:", data);
+              $scope.jsonArray = data;  
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error); 
+            });
+        };
+
+        $scope.doDelete = function (sno) {
+          if (confirm("Is this medicine unavailable?") == false) return;
+
+          var url = "/angular-delete-med?snok=" + sno;
+          $http.get(url).then(done, fail);
+          function done(resp) {
+            $scope.doShow();
+          }
+          function fail(resp) {
+            alert(resp.data);
+          }
+        }; //==============For email already filled================
       });
-      </script>
+    </script>
+    <script>
+      checkLoggedInUser();
+      function checkLoggedInUser() {
+        fetch("/check_user_status", { method: "POST" })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.pass) {
+              if (data.type == "Needy") {
+                location.href = "./dash-needy.html";
+              }
+              email_element = document.getElementById("txtEmail");
+              email_element.value = data.email;
+            } else {
+              window.location.href = "index.html";
+            }
+          });
+      }
+    </script>
   </head>
-  <body  ng-app="Mymodule" ng-controller="Mycontroller">
-   
+  <body
+    ng-app="Mymodule"
+    ng-controller="Mycontroller"
+    onload="checkLoggedInUser()"
+  >
     <!-- ============================NavBar====================================== -->
     <nav class="navbar navbar-expand-lg">
-        <div class="col-md-12">
-            <a class="navbar-brand" href="#">
-                <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44" class="d-inline-block align-text-top ms-3">
-                <span class="text-black" style="font-size: larger;">PiLLshArE</span>
-            </a>
-        </div>
+      <div class="col-md-12">
+        <a class="navbar-brand" href="#">
+          <img
+            src="pics_used/medical logo - Copy.jpg"
+            alt="Logo"
+            width="60"
+            height="44"
+            class="d-inline-block align-text-top ms-3"
+          />
+          <span class="text-black" style="font-size: larger">PiLLshArE</span>
+        </a>
+      </div>
     </nav>
     <center>
-     <h1 class="mb-3"> Medicine Manager </h1>
-     <br>
-     <div class="container">
-     <div class="row">
-      <div class="col-md-1 mt-2 offset-md-4">
-      Email Id
-      </div>
-        <div class="col-md-3">
-        <input type="email" ng-model="email" readonly class="form-control" placeholder="Email Address">
-      </div>
-        <div class="col-md-4">
-          <button type="button" ng-click="doShow();" class="btn btn-outline-success">Get Records</button>
+      <h1 class="mb-3">Medicine Manager</h1>
+      <br />
+      <div class="container">
+        <div class="row">
+          <div class="col-md-1 mt-2 offset-md-4">Email Id</div>
+          <div class="col-md-3">
+            <input
+              type="email"
+              ng-model="email"
+              readonly
+              class="form-control"
+              placeholder="Email Address"
+              id="txtEmail"
+            />
+          </div>
+          <div class="col-md-4">
+            <button
+              type="button"
+              ng-click="doShow();"
+              class="btn btn-outline-success"
+            >
+              Get Records
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-        <!-- ============================Table======================================= -->
-    <table class="table table-striped mt-5">
+      <!-- ============================Table======================================= -->
+      <table class="table table-striped mt-5">
         <thead>
           <tr align="center">
             <th scope="col">S.No.</th>
@@ -100,17 +137,22 @@
         </thead>
         <tbody>
           <tr ng-repeat="obj in jsonArray" align="center">
-           <td>{{$index+1}}</td>
-           <td>{{obj.med}}</td>
-           <td>{{obj.expdate}}</td>
-           <td>{{obj.packing}}</td>
-           <td>{{obj.qty}}</td>
-           <td align="center">
-            <input type="button" class="btn btn-outline-success" value="Unavail" ng-click="doDelete(obj.srno);"> 
+            <td>{{$index+1}}</td>
+            <td>{{obj.med}}</td>
+            <td>{{obj.expdate}}</td>
+            <td>{{obj.packing}}</td>
+            <td>{{obj.qty}}</td>
+            <td align="center">
+              <input
+                type="button"
+                class="btn btn-outline-success"
+                value="Unavail"
+                ng-click="doDelete(obj.srno);"
+              />
             </td>
           </tr>
         </tbody>
       </table>
     </center>
-</body>
+  </body>
 </html>

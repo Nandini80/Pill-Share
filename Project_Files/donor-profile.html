@@ -21,7 +21,7 @@
       $("#btnSearch").click(function () {
         var emailKuch = $("#txtEmail").val();
         var obj = {
-          type: "get",
+          type: "post",
           url: "/get-json-records",
           data: { key1: emailKuch }
         }
@@ -57,23 +57,29 @@
         });
       });
       //==============For email already filled================
-      setActiveUser();
-      function setActiveUser() 
-      {
-        if (localStorage.getItem("activeK") == undefined) 
-        {
-          location.href = "index.html";
-          return;
-        }
+    checkLoggedInUser()
+    function checkLoggedInUser() {
+      fetch('/check_user_status', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+          if (data.pass) { 
+            if (data.type=="Needy"){
+              location.href ="./dash-needy.html"
+            }
+            $("#PrintDonor").html(data.email);
+            $("#txtEmail").val(data.email).prop("readonly", true);
+          } else {
+            window.location.href = "index.html";
+          }
+ 
+        })
+    }
 
-        var au = localStorage.getItem("activeK");
-        $("#txtEmail").val(au).prop("readonly", true);
-      }
     });
   </script>
 </head>
 
-<body style="width: 100%;">
+<body style="width: 100%;" onload="checkLoggedInUser()">
 
   <!-- ========================Nav bar================================ -->
     <nav class="navbar navbar-expand-lg">

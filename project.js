@@ -347,7 +347,7 @@ app.post("/profile-donor-save", function (req, resp) {
   );
 });
 //=======================search button in donor profile=============================
-app.get("/get-json-records", function (req, resp) {
+app.post("/get-json-records", function (req, resp) {
   dbRef.query(
     "select * from donors where email=?",
     [req.query.key1],
@@ -404,9 +404,9 @@ app.get("/avail-med", function (req, resp) {
   resp.sendFile(process.cwd() + "/Project_Files/avail-med.html");
 });
 
-app.get("/ajax-avail-med", function (req, resp) {
+app.post("/ajax-avail-med", function (req, resp) {
   dbRef.query(
-    "insert into medsavailable values(0,?,?,?,?,?)",
+    "INSERT INTO medsavailable VALUES(0,?,?,?,?,?)",
     [
       req.query.emailK,
       req.query.mednK,
@@ -423,9 +423,9 @@ app.get("/ajax-avail-med", function (req, resp) {
 
 //==============================Donor settings==============================
 app.post("/donor-settings-update-pwd", function (req, resp) {
-  var newpwd = req.query.np;
-  var oldpwd = req.query.op;
-  var compwd = req.query.cp;
+  var newpwd = req.body.np;
+  var oldpwd = req.body.op;
+  var compwd = req.body.cp;
 
   if (newpwd != oldpwd) {
     if (newpwd == compwd) {
@@ -576,8 +576,9 @@ app.get("/panel-users", function (req, resp) {
   resp.sendFile(process.cwd() + "/Project_Files/panel-users.html");
 });
 
-app.get("/angular-fetch-users", function (req, resp) {
-  dbRef.query("select * from coustomers", function (err, resultTableJson) {
+app.post("/angular-fetch-users", function (req, resp) {
+  dbRef.query("SELECT * FROM coustomers", function (err, resultTableJson) {
+    console.log(resultTableJson);
     if (err == null) resp.send(resultTableJson);
     else resp.send(err);
   });
@@ -693,7 +694,7 @@ app.get("/AllMeds", function (req, resp) {
   resp.sendFile(process.cwd() + "/Project_Files/dash-admin.html");
 });
 
-app.get("/angular-fetch-All-med-in-admin", function (req, resp) {
+app.post("/angular-fetch-All-med-in-admin", function (req, resp) {
   dbRef.query("select * from medsavailable", function (err, resultTableJson) {
     if (err == null) resp.send(resultTableJson);
     else resp.send(err);
@@ -716,10 +717,10 @@ app.get("/Med-avail", function (req, resp) {
   resp.sendFile(process.cwd() + "/Project_Files/med-manager.html");
 });
 
-app.get("/angular-fetch-avail-med", function (req, resp) {
+app.post("/angular-fetch-avail-med", function (req, resp) {
   dbRef.query(
-    "select * from medsavailable where email=?",
-    [req.query.emailk],
+    "SELECT * FROM medsavailable WHERE email=?",
+    [req.body.emailk],
     function (err, resultTableJson) {
       if (err == null) resp.send(resultTableJson);
       else resp.send(err);
