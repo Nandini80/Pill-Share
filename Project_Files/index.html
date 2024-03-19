@@ -506,7 +506,8 @@ function submitSignupForm(event) {
     })
     .then(response => response.json())
     .then(data => {
-      if (data.message === 'success') { 
+        if (data.message === 'success') { 
+        loggedIn();
         if (type === "Donor") {
             location.href = "./dash-donor.html";
         } else if (type === "Needy") {
@@ -542,6 +543,7 @@ function submitSignupForm(event) {
             .then(response => response.json())
             .then(data => {
                 if (data) {
+                    loggedIn();
                     if (data === "Donor") {
                         location.href = "./dash-donor.html";
                     } else if (data === "Needy") {

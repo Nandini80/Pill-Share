@@ -6,18 +6,23 @@ const nodemailer = require("nodemailer");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 require("dotenv").config();
-const sessionStore = new session.MemoryStore();
 
-app.use(express.json());
 app.use(cookieParser());
 app.use(
   session({
-    store: sessionStore,
+    name: "PillShareSessionID",
+    cookie: {
+      httpOnly: false,
+    },
+    // store: sessionStore,
     secret: "5c5PC+2L79LXeWiX2DKBGyIM0xMULOXphYGNAuKfQMs=",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
   })
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: "true" }));
 
 app.listen(2023, function () {
   console.log("server starteddd!!!!!!!!!!");
@@ -31,6 +36,19 @@ app.get("/", function (req, resp) {
   resp.send(process.cwd() + "/Project_Files/index.html");
 });
 
+const authMiddleware = ()=>{
+  app.use((req,res,next)=>{
+    if(req.session.email){
+      console.log(req.session)
+      console.log(req.session.id)
+      return next()
+    }
+    else{
+      return res.redirect('/login');
+
+    }
+  })
+} 
 //Connect to sql
 // var dbConfig = {
 //     host: "127.0.0.1",,
@@ -66,18 +84,20 @@ var transporter = nodemailer.createTransport({
 
 app.post("/signup", (req, res) => {
   const { emailK, pwdK, optK } = req.body;
-
+  const salt = bcrypt.genSalt(4);
   dbRef.query(
     "INSERT INTO coustomers(email, pwd, type, dos, status) VALUES (?, ?, ?, current_date(), 1)",
-    [emailK, pwdK, optK],
+    [emailK, bcrypt.hash(pwdK,salt), optK],
     (err) => {
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
-          return res.status(409).send({ message:"email_exists"});
+          return res.status(409).send({ message: "email_exists" });
         }
-        return res.status(500).send({ message:err.toString()});
+        return res.status(500).send({ message: err.toString() });
       }
-      req.session.user = { email: emailK, type: optK };  
+      // req.session.user = { email: emailK, type: optK };
+      req.session.email =emailK;
+      req.session.type = optK;
       const mailOptions = {
         from: "nandinijindal010@gmail.com",
         to: emailK,
@@ -93,10 +113,10 @@ app.post("/signup", (req, res) => {
           console.error("Error sending email:", error);
           return res
             .status(500)
-            .send({ message: "Signup successful (email sending failed)"});
+            .send({ message: "Signup successful (email sending failed)" });
         } else {
           console.log("Email sent:", info.response);
-          res.send({ message: 'success' }); // Example JSON response
+          res.send({ message: "success" });  
         }
       });
     }
@@ -151,22 +171,39 @@ app.get("/chk-email", function (req, resp) {
 app.post("/login", function (req, res) {
   const { email, password } = req.body;
   dbRef.query(
-    "select type,status from coustomers where email=? and pwd=?",
-    [email, password],
+    "select type,status,pwd from coustomers where email=?",
+    [email],
     function (err, resultJsonArray) {
       if (err) {
-        return res.status(500).send(err.toString()); // Internal server error
+        return res.status(500).send(err.toString()); 
       }
-
+      
       if (resultJsonArray.length === 1) {
-        if (resultJsonArray[0].status === 1) {
-          req.session.userType = resultJsonArray[0].type;
-          res.send(resultJsonArray[0].type);
-        } else {
-          res.status(403).send({ message:"You are blocked"}); // Forbidden (blocked user)
+        hashed_password = resultJsonArray[0].pwd
+        const verified = bcrypt.compare(password,hashed_password);
+        if (!verified) {
+          res.status(401).send({ message: "Invalid email/password" }); // Unauthorized (invalid credentials)
+
+        }else{
+          if (resultJsonArray[0].status === 1) {
+            req.session.email = email;
+            type = resultJsonArray[0].type
+  
+            req.session.type = type;          
+            // res.send(resultJsonArray[0].type);
+            if (type === "Donor") {
+              res.redirect("./dash-donor.html")
+            } else if (type === "Needy") {
+              res.redirect("./dash-needy.html");
+            } 
+            
+          } else {
+            res.status(403).send({ message: "You are blocked" }); // Forbidden (blocked user)
+          }
         }
+
       } else {
-        res.status(401).send({ message:"Invalid email/password"}); // Unauthorized (invalid credentials)
+        res.status(401).send({ message: "Invalid email/password" }); // Unauthorized (invalid credentials)
       }
     }
   );
@@ -281,10 +318,8 @@ app.post("/profile-donor-save", function (req, resp) {
     "insert into donors(email,name,city,cont,add1,add2,state,avail_hours,gen,proof_id,picname) values(?,?,?,?,?,?,?,?,?,?,?)",
     [email, name, city, cont, add1, add2, state, avail, gen, proof, filename],
     function (err) {
-      if (err == null)
-        resp.redirect(
-          "/DonorSavedPage.html"
-        ); // To open new page on Save button click
+      if (err == null) resp.redirect("/DonorSavedPage.html");
+      // To open new page on Save button click
       else resp.send(err);
     }
   );
