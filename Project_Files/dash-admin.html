@@ -1,122 +1,163 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Dash Board</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="script/angular.min.js"></script> 
-    <script>
-      var module = angular.module("Mymodule",[]);
-      module.controller("Mycontroller",function($scope,$http)
-      {
-        $scope.jsonArray;
-        $scope.doShow=function()
-        {
-            var url="/angular-fetch-All-med-in-admin";
-            $http.get(url).then(done,fail);
-            function done(response)
-            {
-                // alert(JSON.stringify(response.data));
-                $scope.jsonArray=response.data;
-            }
-            function fail(response)
-            {
-                alert(response.data);
-            }
-        }
 
-        $scope.doDeleteExp=function()
-        {
-          var url="/delete-expMedicines";
-          $http.get(url).then(done,fail);
-          function done(resp)
-          {
-            alert(resp.data);
-            $scope.doShow();
-          }
-          function fail(resp)
-          {
-            alert(resp.data);
-          }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dash Board</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+  <script src="script/angular.min.js"></script>
+  <script>
+    var module = angular.module("Mymodule", []);
+    module.controller("Mycontroller", function ($scope, $http) {
+      $scope.jsonArray;
+      $scope.doShow = function () {
+        var url = "/angular-fetch-All-med-in-admin";
+        $http.post(url).then(done, fail);
+        function done(response) {
+          // alert(JSON.stringify(response.data));
+          $scope.jsonArray = response.data;
         }
-      });
-    </script>
-  </head>
-  <body ng-app="Mymodule" ng-controller="Mycontroller">
-   
-    <nav class="navbar navbar-expand-lg">
-        <div class="col-md-12">
+        function fail(response) {
+          alert(response.data);
+        }
+      };
 
-            <a class="navbar-brand" href="#">
-                <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44" class="d-inline-block align-text-top ms-3">
-                <span class="text-black" style="font-size: larger;">PiLLshArE</span>
-                <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary offset-md-9" ng-click="doShow();">Prev All Med</button>
-            </a>
+      $scope.doDeleteExp = function () {
+        var url = "/delete-expMedicines";
+        $http.get(url).then(done, fail);
+        function done(resp) {
+          alert(resp.data);
+          $scope.doShow();
+        }
+        function fail(resp) {
+          alert(resp.data);
+        }
+      };
+    });
+  </script>
+  <script>
+checkLoggedInUser()
+    function checkLoggedInUser() {
+      fetch('/check_user_status', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => { 
+          if (data.pass) {
+            if (data.type != "Admin") { 
+              window.location.href = "index.html";
+
+            } 
+          } else {
+            window.location.href = "index.html";
+          }
+  
+        })
+    }
+  </script>
+</head>
+
+<body ng-app="Mymodule" ng-controller="Mycontroller" onload="checkLoggedInUser()">
+  <nav class="navbar navbar-expand-lg">
+    <div class="col-md-12">
+      <a class="navbar-brand" href="#">
+        <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
+          class="d-inline-block align-text-top ms-3" />
+        <span class="text-black" style="font-size: larger">PiLLshArE</span>
+        <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary offset-md-9"
+          ng-click="doShow();">
+          Prev All Med
+        </button>
+      </a>
+    </div>
+  </nav>
+  <!-- ========================modal of Prev Medicines===================================== -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 offset-md-4" id="exampleModalLabel">
+            All Donated Medicines
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-    </nav>
-    <!-- ========================modal of Prev Medicines===================================== -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5 offset-md-4" id="exampleModalLabel">All Donated Medicines</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- ===================Table of all medicines in modal============================= -->
-        <table class="table table-striped mt-1">
-          <thead>
-            <tr align="center">
-              <th scope="col">S.No.</th>
-              <th scope="col">Medicine</th>
-              <th scope="col">Expiry Date</th>
-              <th scope="col">Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="obj in jsonArray" align="center">
-             <td>{{$index+1}}</td>
-             <td>{{obj.med}}</td>
-             <td>{{obj.expdate}}</td>
-             <td>{{obj.qty}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="offset-md-4 mb-4">
-        <button type="button" ng-click="doDeleteExp();" class="btn btn-primary">Delete Expiry Medicines</button>
+        <div class="modal-body">
+          <!-- ===================Table of all medicines in modal============================= -->
+          <table class="table table-striped mt-1">
+            <thead>
+              <tr align="center">
+                <th scope="col">S.No.</th>
+                <th scope="col">Medicine</th>
+                <th scope="col">Expiry Date</th>
+                <th scope="col">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="obj in jsonArray" align="center">
+                <td>{{$index+1}}</td>
+                <td>{{obj.med}}</td>
+                <td>{{obj.expdate}}</td>
+                <td>{{obj.qty}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="offset-md-4 mb-4">
+          <button type="button" ng-click="doDeleteExp();" class="btn btn-primary">
+            Delete Expiry Medicines
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-    <!-- ===============================Cards============================= -->
-    <div class="container-fluid">
+  <!-- ===============================Cards============================= -->
+  <div class="container-fluid">
     <div class="row">
-    <div class="card col-md-4 mt-5 offset-md-1 me-4" style="width: 18rem;">
-      <img src="pics_used/admin_users.jpg" style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" class="card-img-top" alt="Not available">
-      <div class="card-body">
-        <h5 class="card-title offset-md-3">Current Users</h5>
-        <a href="/panel-users.html" class="btn btn-primary offset-md-4">Users</a>
+      <div class="card col-md-4 mt-5 offset-md-1 me-4" style="width: 18rem">
+        <img src="pics_used/admin_users.jpg" style="
+              border-radius: 50%;
+              border: 10px black;
+              width: 200px;
+              height: 200px;
+              margin: auto;
+            " class="card-img-top" alt="Not available" />
+        <div class="card-body">
+          <h5 class="card-title offset-md-3">Current Users</h5>
+          <a href="/panel-users.html" class="btn btn-primary offset-md-4">Users</a>
+        </div>
       </div>
-    </div>
-    <div class="card col-md-4 ms-5 mt-5 me-4" style="width: 18rem;">
-      <img src="pics_used/admin_donor2.jpg" class="card-img-top" style="border-radius:40%;border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available">
-      <div class="card-body">
-        <h5 class="card-title offset-md-3">Donor Details</h5>
-        <a href="/panel-donors.html" class="btn btn-primary offset-md-4">Donor</a>
+      <div class="card col-md-4 ms-5 mt-5 me-4" style="width: 18rem">
+        <img src="pics_used/admin_donor2.jpg" class="card-img-top" style="
+              border-radius: 40%;
+              border: 10px black;
+              width: 200px;
+              height: 200px;
+              margin: auto;
+            " alt="Not available" />
+        <div class="card-body">
+          <h5 class="card-title offset-md-3">Donor Details</h5>
+          <a href="/panel-donors.html" class="btn btn-primary offset-md-4">Donor</a>
+        </div>
       </div>
-    </div>
-    <div class="card col-md-4 ms-5 mt-5" style="width: 18rem;">
-      <img src="pics_used/admin_needy.jpg" style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" class="card-img-top" alt="Not available">
-      <div class="card-body">
-        <h5 class="card-title offset-md-3">Needy Details</h5>
-        <a href="/panel-needys.html" class="btn btn-primary offset-md-4">Needy</a>
+      <div class="card col-md-4 ms-5 mt-5" style="width: 18rem">
+        <img src="pics_used/admin_needy.jpg" style="
+              border-radius: 50%;
+              border: 10px black;
+              width: 200px;
+              height: 200px;
+              margin: auto;
+            " class="card-img-top" alt="Not available" />
+        <div class="card-body">
+          <h5 class="card-title offset-md-3">Needy Details</h5>
+          <a href="/panel-needys.html" class="btn btn-primary offset-md-4">Needy</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+</body>
+
 </html>
