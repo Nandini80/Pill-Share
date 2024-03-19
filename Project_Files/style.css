@@ -1,23 +1,23 @@
-@import url('https://fonts.googleapis.com/css?family=Allura|Josefin+Sans');
+@import url("https://fonts.googleapis.com/css?family=Allura|Josefin+Sans");
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.wrapper{
+.wrapper {
   margin-top: 10%;
 }
 
-.wrapper h1{
+.wrapper h1 {
   color: rgb(0, 0, 0);
   font-size: 50px;
   margin-bottom: 0px;
   text-align: center;
 }
 
-.team{
+.team {
   display: flex;
   justify-content: center;
   width: auto;
@@ -25,24 +25,24 @@
   flex-wrap: wrap;
 }
 
-.team .team_member{
+.team .team_member {
   background: #dcd8d8;
   margin: 120px;
   margin-bottom: 40px;
   width: 300px;
   padding: 20px;
   line-height: 20px;
-  color: #060606;  
+  color: #060606;
   position: relative;
 }
 
-.team .team_member h3{
+.team .team_member h3 {
   color: #81c644;
   font-size: 20px;
   margin-top: 50px;
 }
 
-.team .team_member p.role{
+.team .team_member p.role {
   color: #000000;
   margin: 15px 0;
   font-size: 20px;
@@ -50,9 +50,7 @@
   font-weight: bold;
 }
 
-
-
-.team .team_member .team_img img{
+.team .team_member .team_img img {
   width: 180px;
   height: 180px;
   padding: 5px;

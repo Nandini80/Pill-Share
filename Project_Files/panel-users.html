@@ -1,134 +1,144 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Users panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
-    <script src="script/angular.min.js"></script>
-    <script>
-      var module = angular.module("Mymodule",[]);
-      module.controller("Mycontroller",function($scope,$http)
-      {
-        $scope.jsonArray;
-        $scope.doShow=function()
-        {
-            var url="/angular-fetch-users";
-            $http.get(url).then(done,fail);
-            function done(response)
-            {
-                // alert(JSON.stringify(response.data));
-                $scope.jsonArray=response.data;
-            }
-            function fail(response)
-            {
-                alert(response.data);
-            }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Users panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+
+  <script src="script/angular.min.js"></script>
+  <script>
+checkLoggedInUser()
+    function checkLoggedInUser() {
+      fetch('/check_user_status', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => { 
+          if (data.pass) {
+            if (data.type != "Admin") { 
+              window.location.href = "index.html";
+
+            } 
+          } else {
+            window.location.href = "index.html";
+          }
+  
+        })
+    }
+  </script>
+  <script>
+    var module = angular.module("Mymodule", []);
+    module.controller("Mycontroller", function ($scope, $http) {
+      $scope.jsonArray;
+      $scope.doShow = function () {
+        var url = "/angular-fetch-users";
+        fetch(url, {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json()) // Parse as JSON (if applicable)
+          .then(data => {
+            console.log(data); // Access data here
+            $scope.jsonArray = data;
+          })
+          .catch(error => {
+            console.error(error); // Handle errors
+          });
+      };
+
+      $scope.doBlock = function (email) {
+        if (confirm("Do you want to block this users?") == false) return;
+
+        var url = "/angular-users-block?emailK=" + email;
+        $http.get(url).then(done, fail);
+        function done(resp) {
+          // alert(resp.data);
+          $scope.doShow();
         }
-
-        $scope.doBlock=function(email)
-        {
-            if(confirm("Do you want to block this users?")==false)
-            return;
-
-            var url="/angular-users-block?emailK="+email;
-            $http.get(url).then(done,fail);
-            function done(resp)
-            {
-              // alert(resp.data);
-              $scope.doShow();
-            }
-            function fail(resp)
-            {
-              alert(resp.data);
-            }
+        function fail(resp) {
+          alert(resp.data);
         }
+      };
 
-        $scope.doResume=function(email)
-        {
-            if(confirm("Do you want to Unblock this users?")==false)
-            return;
+      $scope.doResume = function (email) {
+        if (confirm("Do you want to Unblock this users?") == false) return;
 
-            var url="/angular-users-Unblock?emailK="+email;
-            $http.get(url).then(done,fail);
-            function done(resp)
-            {
-              // alert(resp.data);
-              $scope.doShow();
-            }
-            function fail(resp)
-            {
-              alert(resp.data);
-            }
+        var url = "/angular-users-Unblock?emailK=" + email;
+        $http.get(url).then(done, fail);
+        function done(resp) {
+          // alert(resp.data);
+          $scope.doShow();
         }
-
-        $scope.doDelete=function(email)
-        {
-            if(confirm("Do you want to Delete this users?")==false)
-            return;
-
-            var url="/angular-users-delete-adminPanel?emailK="+email;
-            $http.get(url).then(done,fail);
-            function done(resp)
-            {
-              // alert(resp.data);
-              $scope.doShow();
-            }
-            function fail(resp)
-            {
-              alert(resp.data);
-            }
+        function fail(resp) {
+          alert(resp.data);
         }
-      });
+      };
 
-    </script>
+      $scope.doDelete = function (email) {
+        if (confirm("Do you want to Delete this users?") == false) return;
 
-  </head>
-  <body ng-app="Mymodule" ng-controller="Mycontroller">
-   <!-- ==================================Nav Bar=============================== -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="col-md-12">
+        var url = "/angular-users-delete-adminPanel?emailK=" + email;
+        $http.get(url).then(done, fail);
+        function done(resp) {
+          // alert(resp.data);
+          $scope.doShow();
+        }
+        function fail(resp) {
+          alert(resp.data);
+        }
+      };
+    });
+  </script>
+</head>
 
-            <a class="navbar-brand" href="#">
-                <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44" class="d-inline-block align-text-top ms-3">
-                <span class="text-black" style="font-size: larger;">PiLLshArE</span>
-            </a>
-        </div>
-    </nav>
+<body ng-app="Mymodule" ng-controller="Mycontroller">
+  <!-- ==================================Nav Bar=============================== -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="col-md-12">
+      <a class="navbar-brand" href="#">
+        <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
+          class="d-inline-block align-text-top ms-3" />
+        <span class="text-black" style="font-size: larger">PiLLshArE</span>
+      </a>
+    </div>
+  </nav>
 
-    <!-- ======================================================================== -->
-    <center>
-      <div class="fs-1 offset-md-4 fw-semibold">Users Panel
-        <button type="button" ng-click="doShow();" class="btn btn-outline-success offset-md-4">Show All Users</button>
-      </div>
+  <!-- ======================================================================== -->
+  <center>
+    <div class="fs-1 offset-md-4 fw-semibold">
+      Users Panel
+      <button type="button" ng-click="doShow();" class="btn btn-outline-success offset-md-4">
+        Show All Users
+      </button>
+    </div>
     <!-- ============================Table======================================= -->
     <table class="table table-striped mt-5">
-        <thead>
-          <tr align="center">
-            <th scope="col">S.No.</th>
-            <th scope="col">Eamil Id</th>
-            <th scope="col">Type</th>
-            <th scope="col">Date of Signup</th>
-            <th scope="col">Status</th>
-            <th scope="col">Operations</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="obj in jsonArray" align="center">
-           <td>{{$index+1}}</td>
-           <td>{{obj.email}}</td>
-           <td>{{obj.type}}</td>
-           <td>{{obj.dos}}</td>
-           <td>{{obj.status}}</td>
-           <td>
-            <input type="button" class="btn btn-outline-danger" value="Block" ng-click="doBlock(obj.email);">
-            <input type="button" class="btn btn-outline-success" value="Resume" ng-click="doResume(obj.email);">
-            <input type="button" class="btn btn-outline-success" value="Delete" ng-click="doDelete(obj.email);">
-           </td>
-          </tr>
-        </tbody>
-      </table>
-    </center>
+      <thead>
+        <tr align="center">
+          <th scope="col">S.No.</th>
+          <th scope="col">Eamil Id</th>
+          <th scope="col">Type</th>
+          <th scope="col">Date of Signup</th>
+          <th scope="col">Status</th>
+          <th scope="col">Operations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="obj in jsonArray" align="center">
+          <td>{{$index+1}}</td>
+          <td>{{obj.email}}</td>
+          <td>{{obj.type}}</td>
+          <td>{{obj.dos}}</td>
+          <td>{{obj.status}}</td>
+          <td>
+            <input type="button" class="btn btn-outline-danger" value="Block" ng-click="doBlock(obj.email);" />
+            <input type="button" class="btn btn-outline-success" value="Resume" ng-click="doResume(obj.email);" />
+            <input type="button" class="btn btn-outline-success" value="Delete" ng-click="doDelete(obj.email);" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </center>
 </body>
+
 </html>

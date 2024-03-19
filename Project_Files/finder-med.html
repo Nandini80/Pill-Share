@@ -1,187 +1,194 @@
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Medicine Finder</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="script/angular.min.js"></script> 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <script>
-      var module = angular.module("Mymodule",[]);
-      module.controller("Mycontroller",function($scope,$http)
-      {
-        $scope.cityJSONAry;
-        $scope.jsoncity;
-        $scope.fetchCities=function()
-        {
-          var url="/fetch-city-donors";
-          $http.get(url).then(done,fail);
-          function done(resp)
-          {
-            // alert(JSON.stringify(resp.data));
-            $scope.jsoncity=resp.data;
-          } 
-          function fail(resp)
-          {
-            // alert(resp.data);
-          }
-        }
-        $scope.selcity=function()
-        {
-          //  alert($scope.cityJSONAry.email);
-        }
-        //===============================
-        $scope.jsonmed;
-        $scope.medJSONAry;
-        $scope.selmed=function()
-        {
-          // alert($scope.medJSONAry.med);
-        }
-        $scope.fetchMed=function()
-        {
-          var url="/fetch-meds-donated-by-donors";
-          $http.get(url).then(done,fail);
-          function done(resp)
-          {
-            // alert(JSON.stringify(resp.data));
-            $scope.jsonmed=resp.data;
-          } 
-          function fail(resp)
-          {
-            // alert(resp.data);
-          }
-        }
-        //============donors info in cards=========================
-        $scope.jsonArrayDonor;
-        $scope.fetchDonors=function()
-        {
-          var url="/fetch-Donors-In-MedFinder?cityK="+$scope.cityJSONAry.city+"&medK="+$scope.medJSONAry.med;
-          $http.get(url).then(done,fail);
-          function done(resp)
-          {
-            // alert(JSON.stringify(resp.data));
-            $scope.jsonArrayDonor=resp.data;
-          } 
-          function fail(resp)
-          {
-            alert(resp.data);
-          }
-        }
 
-        //===============MOdal=================
-        $scope.fillInfo;
-        $scope.doShowInModel=function(selIndex)
-        {
-           $scope.fillInfo = $scope.jsonArrayDonor[selIndex];
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medicine Finder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <script src="script/angular.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script>
+    var module = angular.module("Mymodule", []);
+    module.controller("Mycontroller", function ($scope, $http) {
+      $scope.cityJSONAry;
+      $scope.jsoncity;
+      $scope.fetchCities = function () {
+        var url = "/fetch-city-donors";
+        $http.get(url).then(done, fail);
+        function done(resp) {
+          // alert(JSON.stringify(resp.data));
+          $scope.jsoncity = resp.data;
         }
-      });
-    </script>
-  </head>
-  <body ng-app="Mymodule" ng-controller="Mycontroller" ng-init="fetchCities();fetchMed();">
-   
-    <nav class="navbar navbar-expand-lg">
-        <div class="col-md-12">
+        function fail(resp) {
+          // alert(resp.data);
+        }
+      }
+      $scope.selcity = function () {
+        //  alert($scope.cityJSONAry.email);
+      }
+      //===============================
+      $scope.jsonmed;
+      $scope.medJSONAry;
+      $scope.selmed = function () {
+        // alert($scope.medJSONAry.med);
+      }
+      $scope.fetchMed = function () {
+        var url = "/fetch-meds-donated-by-donors";
+        $http.get(url).then(done, fail);
+        function done(resp) {
+          // alert(JSON.stringify(resp.data));
+          $scope.jsonmed = resp.data;
+        }
+        function fail(resp) {
+          // alert(resp.data);
+        }
+      }
+      //============donors info in cards=========================
+      $scope.jsonArrayDonor;
+      $scope.fetchDonors = function () {
+        var url = "/fetch-Donors-In-MedFinder?cityK=" + $scope.cityJSONAry.city + "&medK=" + $scope.medJSONAry.med;
+        $http.get(url).then(done, fail);
+        function done(resp) {
+          // alert(JSON.stringify(resp.data));
+          $scope.jsonArrayDonor = resp.data;
+        }
+        function fail(resp) {
+          alert(resp.data);
+        }
+      }
 
-            <a class="navbar-brand" href="#">
-                <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44" class="d-inline-block align-text-top ms-3">
-                <span class="text-black" style="font-size: larger;">PiLLshArE</span>
-            </a>
-        </div>
-    </nav>
+      //===============MOdal=================
+      $scope.fillInfo;
+      $scope.doShowInModel = function (selIndex) {
+        $scope.fillInfo = $scope.jsonArrayDonor[selIndex];
+      }
+    });
+  </script>
+</head>
 
-    <div class="container-fluid">
-        <h1 class="offset-md-5 mb-4">Medicine Finder</h1>
-        <div class="row">
-            <div class="col-md-3 mt-3 offset-md-3">
-            <label class="form-label">City</label>
-            <select class="form-select" ng-options="obj.city for obj in jsoncity" ng-model="cityJSONAry" ng-change="selcity();" ng-init="cityJSONAry=none">
-                <option value="">Select</option>
-              </select>
-            </div>
-            <div class="col-md-3 mt-3 ms-4">
-                <label class="form-label">Medicines List</label>
-            <select class="form-select" ng-options="obj.med for obj in jsonmed" ng-model="medJSONAry" ng-change="selmed();" ng-init="medJSONAry=none">
-                <option value="">Select</option>
-              </select>
-            </div>
-        </div>
+<body ng-app="Mymodule" ng-controller="Mycontroller" ng-init="fetchCities();fetchMed();">
+
+  <nav class="navbar navbar-expand-lg">
+    <div class="col-md-12">
+
+      <a class="navbar-brand" href="#">
+        <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
+          class="d-inline-block align-text-top ms-3">
+        <span class="text-black" style="font-size: larger;">PiLLshArE</span>
+      </a>
     </div>
-    <div class="offset-md-5 mt-4">
-      <input type="button" value="Show All Donors" ng-click="fetchDonors();" class="btn btn-primary">
+  </nav>
+
+  <div class="container-fluid">
+    <h1 class="offset-md-5 mb-4">Medicine Finder</h1>
+    <div class="row">
+      <div class="col-md-3 mt-3 offset-md-3">
+        <label class="form-label">City</label>
+        <select class="form-select" ng-options="obj.city for obj in jsoncity" ng-model="cityJSONAry"
+          ng-change="selcity();" ng-init="cityJSONAry=none">
+          <option value="">Select</option>
+        </select>
+      </div>
+      <div class="col-md-3 mt-3 ms-4">
+        <label class="form-label">Medicines List</label>
+        <select class="form-select" ng-options="obj.med for obj in jsonmed" ng-model="medJSONAry" ng-change="selmed();"
+          ng-init="medJSONAry=none">
+          <option value="">Select</option>
+        </select>
+      </div>
     </div>
-    <div class="container">
-    <div class="row"> 
-    <div class="col-md-3" ng-repeat="obj in jsonArrayDonor">
-      <div class="card ms-3 mt-5 mb-2 bg-info-subtle">
-        <!-- <img src="pics_used/noprofilep1.jpg" class="card-img-top" style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available"> -->
-        <div class="card-body">
-          <div class="card-title ms-2">Name={{obj.name}}</div>
-          <div class="card-title ms-2">City={{obj.city}}</div>
-          <div class="card-title ms-2">Contact={{obj.cont}}</div>
-          <button type="button" class="btn btn-outline-dark mt-2 offset-md-3" data-bs-toggle="modal" data-bs-target="#exampleModal" ng-click="doShowInModel($index);">More Info</button>
+  </div>
+  <div class="offset-md-5 mt-4">
+    <input type="button" value="Show All Donors" ng-click="fetchDonors();" class="btn btn-primary">
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3" ng-repeat="obj in jsonArrayDonor">
+        <div class="card ms-3 mt-5 mb-2 bg-info-subtle">
+          <!-- <img src="pics_used/noprofilep1.jpg" class="card-img-top" style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available"> -->
+          <div class="card-body">
+            <div class="card-title ms-2">Name={{obj.name}}</div>
+            <div class="card-title ms-2">City={{obj.city}}</div>
+            <div class="card-title ms-2">Contact={{obj.cont}}</div>
+            <button type="button" class="btn btn-outline-dark mt-2 offset-md-3" data-bs-toggle="modal"
+              data-bs-target="#exampleModal" ng-click="doShowInModel($index);">More Info</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<!-- ==================================Modal of More info======================= -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title offset-md-2" id="exampleModalLabel">Account Holder Details</h3>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p><div class="row">
-          <div class="col-md-6">
-            Email={{fillInfo.email}}
+  <!-- ==================================Modal of More info======================= -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title offset-md-2" id="exampleModalLabel">Account Holder Details</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+          <div class="row">
+            <div class="col-md-6">
+              Email={{fillInfo.email}}
+            </div>
+            <div class="col-md-4">
+              Contact={{fillInfo.cont}}
+            </div>
           </div>
-          <div class="col-md-4">
-            Contact={{fillInfo.cont}}
+          </p>
+          <p>
+          <div class="row">
+            <div class="col-md-6">
+              Availability Hours={{fillInfo.avail_hours}}
+            </div>
+            <div class="col-md-4">
+              Gender={{fillInfo.gen}}
+            </div>
           </div>
-        </div></p>
-        <p><div class="row">
-          <div class="col-md-6">
-            Availability Hours={{fillInfo.avail_hours}}
+          </p>
+          <p>
+          <div class="row">
+            <div class="col-md-6">
+              City={{fillInfo.city}}
+            </div>
+            <div class="col-md-6">
+              State={{fillInfo.state}}
+            </div>
           </div>
-          <div class="col-md-4">
-            Gender={{fillInfo.gen}}
+          </p>
+          <p>Address={{fillInfo.add1}}</p>
+          <h3 class="offset-md-3">Medicine Details</h3>
+          <hr>
+          <p>
+          <div class="row">
+            <div class="col-md-6">
+              Medicine Name={{fillInfo.med}}
+            </div>
+            <div class="col-md-6">
+              Avalabile Quantity={{fillInfo.qty}}
+            </div>
           </div>
-        </div></p>
-        <p><div class="row">
-          <div class="col-md-6">
-            City={{fillInfo.city}}
+          </p>
+          <p>
+          <div class="row">
+            <div class="col-md-6">
+              Exp Date={{fillInfo.expdate}}
+            </div>
+            <div class="col-md-6">
+              Packing={{fillInfo.packing}}
+            </div>
           </div>
-          <div class="col-md-6">
-            State={{fillInfo.state}}
-          </div>
-        </div></p>
-        <p>Address={{fillInfo.add1}}</p>
-        <h3 class="offset-md-3">Medicine Details</h3>
-        <hr>
-        <p><div class="row">
-          <div class="col-md-6">
-            Medicine Name={{fillInfo.med}}
-          </div>
-          <div class="col-md-6">
-            Avalabile Quantity={{fillInfo.qty}}
-          </div>
-        </div></p>
-        <p><div class="row">
-          <div class="col-md-6">
-            Exp Date={{fillInfo.expdate}}
-          </div>
-          <div class="col-md-6">
-            Packing={{fillInfo.packing}}
-          </div>
-        </div></p>
-      </div>
-      <div>
-        <button type="button" class="btn btn-secondary offset-md-5 mb-3" data-bs-dismiss="modal">Close</button>
+          </p>
+        </div>
+        <div>
+          <button type="button" class="btn btn-secondary offset-md-5 mb-3" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-    </body>
-    </html>
+</body>
+
+</html>
