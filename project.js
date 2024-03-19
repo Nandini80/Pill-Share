@@ -489,11 +489,11 @@ app.post("/profile-needy-save", function (req, resp) {
 });
 
 //=======================Fetch button in Needy profile=============================
-app.get("/fetch-needy-profile-record", function (req, resp) {
-  var email = req.query.key1;
+app.post("/fetch-needy-profile-record", function (req, resp) {
+  var email = req.body.key1;
   dbRef.query(
-    "select * from needy where email=?",
-    [req.query.key1],
+    "SELECT * FROM needy WHERE email=?",
+    [email],
     function (err, resultTableJson) {
       if (err == null) {
         if (resultTableJson.length == 1) {

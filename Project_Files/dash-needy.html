@@ -43,7 +43,7 @@
               location.href = "./dash-donor.html"
             }
 
-            $("#PrintDonor").html(data.email);
+            $("#PrintNeedy").html(data.email);
             $("#txtEmail").val(data.email).prop("readonly", true);
           } else {
             window.location.href = "index.html";
@@ -51,6 +51,7 @@
 
         })
     }
+    checkLoggedInUser();
 
 
     async function logout() {
@@ -74,7 +75,6 @@
         console.error(error);
       }
     }
-    checkLoggedInUser();
   </script>
 </head>
 
