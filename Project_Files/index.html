@@ -512,13 +512,10 @@
     }
     function submitLoginForm(event) {
 
-        event.preventDefault(); // Prevent default form submission
-
-        // Access form elements using event.target
+        event.preventDefault(); 
         const email = event.target.elements['emaillog'].value;
         const password = event.target.elements['pwdlog'].value;
-
-        // Prepare data object
+ 
         const data = {
             emailK: email,
             pwdK: password,

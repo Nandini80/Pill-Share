@@ -9,50 +9,76 @@
     integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <script>
-    $(document).ready(function () {
-      $("#btnsetup").click(function () {
-        var emailk = $("#txtEmail").val();
-        var oldpwdk = $("#oldpwd").val();
-        var newpwdk = $("#newpwd").val();
-        var compwdk = $("#compwd").val();
-        var obj = {
-          type: "get",
-          url: "/needy-settings-update-pwd",
-          data: {
-            email: emailk,
-            op: oldpwdk,
-            np: newpwdk,
-            cp: compwdk
-          }
-        }
-        $.ajax(obj).done(function (resp) {
-          // alert(JSON.stringify(resp));
-          $("#ast").html(resp);
-        }).fail(function (err) {
-          $("#ast").html(err);
-        });
-      });
-      setActiveUser();
-      function setActiveUser() {
-        if (localStorage.getItem("activeK") == undefined) {
-          location.href = "index.html";
-          return;
-        }
-        var au = localStorage.getItem("activeK");
-        $("#PrintNeedy").html(au);
-        $("#txtEmail").val(au).prop("readonly", true);
-      }
+    $("#btnsetup").click(function () {
+      var emailk = $("#txtEmail").val();
+      var oldpwdk = $("#oldpwd").val();
+      var newpwdk = $("#newpwd").val();
+      var compwdk = $("#compwd").val();
 
-      $("#doLogout").click(function () {
-        localStorage.removeItem("activeK");
-        location.replace("/index.html")
-        return;
-      });
+      const data = {
+        email: emailk,
+        op: oldpwdk,
+        np: newpwdk,
+        cp: compwdk
+      }; fetch('/needy-settings-update-pwd', {
+        method: 'POST', // Use POST for updating data
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json()) // Parse JSON response (if applicable)
+        .then(data => {
+          $("#ast").html(data); // Update element content
+        })
+        .catch(error => {
+          $("#ast").html('An error occurred: ' + error); // Display error message
+        });
     });
+
+    function checkLoggedInUser() {
+      fetch('/check_user_status', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+          if (data.pass) { 
+            if (data.type=="Donor"){
+              location.href ="./dash-donor.html"
+            }
+
+            $("#PrintDonor").html(data.email);
+            $("#txtEmail").val(data.email).prop("readonly", true);
+          } else {
+            window.location.href = "index.html";
+          }
+
+        })
+    }
+
+
+    async function logout() {
+      try {
+        const response = await fetch('/logout', {
+          method: 'POST',
+        });
+
+        if (!response.ok) {
+          throw new Error('Error logging out');
+        }
+        const responseJson = await response.json();
+
+        if (responseJson.success) {
+          console.log('Logout successful! Redirecting to login...');
+          window.location.href = '/login.html';
+        } else {
+          console.error('Logout failed. Check server logs for details.');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }  
+    checkLoggedInUser();
   </script>
 </head>
 
-<body>
+<body onload="checkLoggedInUser()">
 
   <nav class="navbar navbar-expand-lg">
     <div class="col-md-12">
@@ -61,7 +87,7 @@
         <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
           class="d-inline-block align-text-top ms-3">
         <span class="text-black" style="font-size: larger;">PiLLshArE</span>
-        <button class="btn btn-primary offset-md-9" id="doLogout">Logout</button>
+        <button class="btn btn-primary offset-md-9" onclick="logout()" id="doLogout">Logout</button>
       </a>
     </div>
   </nav>
@@ -69,38 +95,38 @@
   <!-- ===============================Cards============================= -->
   <div class="offset-md-4 fs-2 fw-semibold mb-2">WELCOME <span id="PrintNeedy">*</span></div>
   <div class="container-fluid">
-  <div class="row">
-    <div class="card col-md-4 mt-3 offset-md-1 me-4" style="width: 18rem;">
-      <img src="pics_used/profile_needy.jpg" style="border: 10px black; width: 200px; height: 200px;margin: auto;"
-        class="card-img-top" alt="Not available">
-      <div class="card-body">
-        <h5 class="card-title offset-md-4">Details</h5>
-        <p class="card-text">Click here to Submit or Update the details of the person.</p>
-        <a href="/needy-profile.html" class="btn btn-primary offset-md-3">Click here</a>
+    <div class="row">
+      <div class="card col-md-4 mt-3 offset-md-1 me-4" style="width: 18rem;">
+        <img src="pics_used/profile_needy.jpg" style="border: 10px black; width: 200px; height: 200px;margin: auto;"
+          class="card-img-top" alt="Not available">
+        <div class="card-body">
+          <h5 class="card-title offset-md-4">Details</h5>
+          <p class="card-text">Click here to Submit or Update the details of the person.</p>
+          <a href="/needy-profile.html" class="btn btn-primary offset-md-3">Click here</a>
+        </div>
       </div>
-    </div>
-    <div class="card col-md-4 ms-5 mt-3 me-4" style="width: 18rem;">
-      <img src="pics_used/medicines_img2.jpg" class="card-img-top"
-        style="border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available">
-      <div class="card-body">
-        <h5 class="card-title offset-md-2">Find Medicines</h5>
-        <p class="card-text ms-3">Click here to search for the medicines that you need.</p>
-        <a href="/finder-med.html" class="btn btn-primary offset-md-3">Click here</a>
+      <div class="card col-md-4 ms-5 mt-3 me-4" style="width: 18rem;">
+        <img src="pics_used/medicines_img2.jpg" class="card-img-top"
+          style="border: 10px black; width: 200px; height: 200px;margin: auto;" alt="Not available">
+        <div class="card-body">
+          <h5 class="card-title offset-md-2">Find Medicines</h5>
+          <p class="card-text ms-3">Click here to search for the medicines that you need.</p>
+          <a href="/finder-med.html" class="btn btn-primary offset-md-3">Click here</a>
+        </div>
       </div>
-    </div>
-    <div class="card col-md-4 ms-5 mt-3" style="width: 18rem;">
-      <img src="pics_used/settings_needy.jpg"
-        style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" class="card-img-top"
-        alt="Not available">
-      <div class="card-body">
-        <h5 class="card-title offset-md-4">Settings</h5>
-        <p class="card-text">Click here to open Settings and to update password.</p>
-        <button type="button" class="btn btn-primary offset-md-3" data-bs-toggle="modal"
-          data-bs-target="#exampleModal">Click here</button>
+      <div class="card col-md-4 ms-5 mt-3" style="width: 18rem;">
+        <img src="pics_used/settings_needy.jpg"
+          style="border-radius:50%;border: 10px black; width: 200px; height: 200px;margin: auto;" class="card-img-top"
+          alt="Not available">
+        <div class="card-body">
+          <h5 class="card-title offset-md-4">Settings</h5>
+          <p class="card-text">Click here to open Settings and to update password.</p>
+          <button type="button" class="btn btn-primary offset-md-3" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">Click here</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
   <!--===========================Settings Modal============================== -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -132,7 +158,8 @@
           </div>
         </div>
         <div>
-          <button type="button" id="btnsetup" class="btn btn-primary offset-md-5 mb-2 me-1">Update</button><span style="font-weight: 500;" id="ast"></span>
+          <button type="button" id="btnsetup" class="btn btn-primary offset-md-5 mb-2 me-1">Update</button><span
+            style="font-weight: 500;" id="ast"></span>
         </div>
       </div>
     </div>

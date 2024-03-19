@@ -36,20 +36,7 @@ app.use(express.urlencoded(true));
 app.get("/", function (req, resp) {
   resp.send(process.cwd() + "/Project_Files/index.html");
 });
-
-const authMiddleware = ()=>{
-  app.use((req,res,next)=>{
-    if(req.session.email){
-      console.log(req.session)
-      console.log(req.session.id)
-      return next()
-    }
-    else{
-      return res.redirect('/login');
-
-    }
-  })
-} 
+ 
 //Connect to sql
 // var dbConfig = {
 //     host: "127.0.0.1",,
@@ -81,25 +68,30 @@ var transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-app.post('/check_user_status',(req,res)=>{
-  if(req.session.email){
-    res.send({status: "loggedin" ,email: req.session.email,type:req.session.type,pass:true}) ;
-
-  }else{
-    res.send({status: "not_loggedin" ,pass:false}); // Pass -> for letting the user pass or not 
+app.post("/check_user_status", (req, res) => {
+  if (req.session.email) {
+    console.log(type)
+    res.send({
+      status: "loggedin",
+      email: req.session.email,
+      type: req.session.type,
+      pass: true,
+    });
+  } else {
+    res.send({ status: "not_loggedin", pass: false }); // Pass -> for letting the user pass or not
   }
-})
+});
 // ================Index page Sign Up==========================================
 app.post("/signup", (req, res) => {
   const { emailK, pwdK, optK } = req.body;
-  bcrypt.genSalt(10,(err,salt)=>{
-    if (err){
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) {
       return res.status(500).send({ message: err.toString() });
-    };
-    bcrypt.hash(pwdK,salt,(err,password_hash)=>{
-      if (err){
+    }
+    bcrypt.hash(pwdK, salt, (err, password_hash) => {
+      if (err) {
         return res.status(500).send({ message: err.toString() });
-      };
+      }
       dbRef.query(
         "INSERT INTO coustomers(email, pwd, type, dos, status) VALUES (?, ?, ?, current_date(), 1)",
         [emailK, password_hash, optK],
@@ -111,7 +103,7 @@ app.post("/signup", (req, res) => {
             return res.status(500).send({ message: err.toString() });
           }
           // req.session.user = { email: emailK, type: optK };
-          req.session.email =emailK;
+          req.session.email = emailK;
           req.session.type = optK;
           const mailOptions = {
             from: "nandinijindal010@gmail.com",
@@ -122,7 +114,7 @@ app.post("/signup", (req, res) => {
               You can now login to donate or take medicines.
             `,
           };
-    
+
           transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
               console.error("Error sending email:", error);
@@ -131,14 +123,13 @@ app.post("/signup", (req, res) => {
                 .send({ message: "Signup successful (email sending failed)" });
             } else {
               console.log("Email sent:", info.response);
-                
-              res.send({ message: "success",type :optK });  
+
+              res.send({ message: "success", type: optK });
             }
           });
         }
       );
-       
-    })
+    });
   });
 });
 
@@ -185,49 +176,56 @@ app.get("/chk-email", function (req, resp) {
     }
   );
 });
-app.post('/logout',(req,res)=>{
-  
+app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error(err);
-      return res.status(500).send({error:'Error logging out',success:false});
+      return res
+        .status(500)
+        .send({ error: "Error logging out", success: false });
     }
     req.session = null;
-    return res.status(200).send({success:true});
+    return res.status(200).send({ success: true });
   });
-})
+});
 //======================Login button Click=======================================
+app.get('/login',(req,res)=>{
+  res.redirect('./index.html')
+})
 app.post("/login", function (req, res) {
-  const { email, password } = req.body; 
+  const { email, password } = req.body;
   dbRef.query(
     "select type,status,pwd from coustomers where email=?",
     [email],
-    function (err, resultJsonArray) {
+    (err, resultJsonArray) => {
       if (err) {
-        res.status(500).send({ message:err.toString()}); 
-      }
-      if (resultJsonArray.length === 1) {
-        hashed_password = resultJsonArray[0].pwd 
-        const verified = bcrypt.compare(password,hashed_password);
+        res.status(500).send({ message: err.toString() });
+      } 
+      if (!resultJsonArray || resultJsonArray.length === 0) {
+        res
+          .status(401)
+          .send({ message: "Invalid email/password", pass: false }); // Or a more specific message
+      } else {
+        hashed_password = resultJsonArray[0].pwd;
+        const verified = bcrypt.compare(password, hashed_password);
         if (!verified) {
-           console.log(email,password)
-          res.status(401).send({ message: "Invalid email/password" ,pass:false}); // Unauthorized (invalid credentials)
-
-        }else{
+          console.log(email, password);
+          res
+            .status(401)
+            .send({ message: "Invalid email/password", pass: false }); // Unauthorized (invalid credentials)
+        } else {
           if (resultJsonArray[0].status === 1) {
-            type = resultJsonArray[0].type
+            type = resultJsonArray[0].type;
             req.session.email = email;
-            req.session.type = type;          
-   
-            res.status(200).send({ message: "LoggedIn",pass:true ,type:type}); 
-            
+            req.session.type = type;
+
+            res
+              .status(200)
+              .send({ message: "LoggedIn", pass: true, type: type });
           } else {
-            res.status(403).send({ message: "You are blocked",pass:false }); // Forbidden (blocked user)
+            res.status(403).send({ message: "You are blocked", pass: false }); // Forbidden (blocked user)
           }
         }
-
-      } else {
-        res.status(401).send({ message: "Invalid email/password" ,pass:false}); // Unauthorized (invalid credentials)
       }
     }
   );
@@ -424,7 +422,7 @@ app.get("/ajax-avail-med", function (req, resp) {
 });
 
 //==============================Donor settings==============================
-app.get("/donor-settings-update-pwd", function (req, resp) {
+app.post("/donor-settings-update-pwd", function (req, resp) {
   var newpwd = req.query.np;
   var oldpwd = req.query.op;
   var compwd = req.query.cp;
