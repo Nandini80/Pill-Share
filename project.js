@@ -542,14 +542,9 @@ app.post("/profile-needy-update", function (req, resp) {
     }
   );
 });
-
-<<<<<<< HEAD
-//===================================Needy settings============================== 
-app.post("/needy-settings-update-pwd", function (req, resp) {
-=======
+ 
 //===================================Needy settings==============================
-app.get("/needy-settings-update-pwd", function (req, resp) {
->>>>>>> parent of 4b2590b (password update from setting tab updated)
+app.get("/needy-settings-update-pwd", function (req, resp) { 
   var newpwd = req.query.np;
   var oldpwd = req.query.op;
   var compwd = req.query.cp;    
