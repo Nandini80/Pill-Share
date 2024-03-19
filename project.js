@@ -54,16 +54,16 @@ const dbConfig = {
   dateStrings: true,
 };
 
-const handleDisconnect = () => {
-  connection = mysql.createConnection(dbConfig);
+const handleDisconnect = () => { 
+  dbRef = mysql.createConnection(dbConfig);
 
-  connection.connect(function (err) {
+  dbRef.connect(function (err) { 
     if (err) {
       console.log("error when connecting to db:", err);
       setTimeout(handleDisconnect, 2000);
     }
-  });
-  connection.on("error", (err) => {
+  }); 
+  dbRef.on("error", (err) => { 
     console.log("db error", err);
     if (err.code === "PROTOCOL_CONNECTION_LOST") {
       handleDisconnect();
