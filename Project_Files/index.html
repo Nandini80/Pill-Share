@@ -231,15 +231,9 @@
                             <label for="exampleInputPassword1" class="form-label">Password</label>
                             <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd" required>
                             <i id="pwd" class="fa-solid sign fa-eye-slash"></i>
-                        </div>
-                        <div class="mb-3">
-                            <span class="me-2"> Date of signup</span>
-                            <input type="date"
-                                style="border-radius: 7px 7px 7px 7px;padding: 4px 4px 4px 4px;width: 130px;border-color:lightcyan"
-                                required>
-                        </div>
-                        <div class="mb-3 dropdown">
-                            <select class="btn btn-outline-success" id="type">
+                        </div> 
+                        <div class="mb-3 dropdown w-full ">
+                            <select class="btn btn-outline-success w-full" style="width: 100%" id="type">
                                 <option style="background-color: white;color: black;" value="Donor">Donor</option>
                                 <option style="background-color: white;color: black;" value="Needy">Needy</option>
                             </select>
@@ -507,12 +501,7 @@ function submitSignupForm(event) {
     .then(response => response.json())
     .then(data => {
         if (data.message === 'success') { 
-        loggedIn();
-        if (type === "Donor") {
-            location.href = "./dash-donor.html";
-        } else if (type === "Needy") {
-            location.href = "./dash-needy.html";
-        } 
+        loggedIn(); 
       } else if (data.message === 'email_exists') {
         alert('Email already exists. Please try a different email.');
       } else {
@@ -543,14 +532,7 @@ function submitSignupForm(event) {
             .then(response => response.json())
             .then(data => {
                 if (data) {
-                    loggedIn();
-                    if (data === "Donor") {
-                        location.href = "./dash-donor.html";
-                    } else if (data === "Needy") {
-                        location.href = "./dash-needy.html";
-                    } else {
-                        alert(data);
-                    }
+                    loggedIn(); 
                 } else {
                     alert('Login failed. Please check your credentials.');
                 }

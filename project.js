@@ -5,6 +5,7 @@ const mysql = require("mysql2");
 const nodemailer = require("nodemailer");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 app.use(cookieParser());
@@ -80,47 +81,70 @@ var transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-// ================Index page Sign Up==========================================
+app.post('/check_user_status',(req,res)=>{
+  if(req.session.email){
+    res.send({status: "loggedin" ,email: req.session.email,type:req.session.type,pass:true}) ;
 
+  }else{
+    res.send({status: "not_loggedin" ,pass:false}); // Pass -> for letting the user pass or not 
+  }
+})
+// ================Index page Sign Up==========================================
 app.post("/signup", (req, res) => {
   const { emailK, pwdK, optK } = req.body;
-  const salt = bcrypt.genSalt(4);
-  dbRef.query(
-    "INSERT INTO coustomers(email, pwd, type, dos, status) VALUES (?, ?, ?, current_date(), 1)",
-    [emailK, bcrypt.hash(pwdK,salt), optK],
-    (err) => {
-      if (err) {
-        if (err.code === "ER_DUP_ENTRY") {
-          return res.status(409).send({ message: "email_exists" });
-        }
+  bcrypt.genSalt(10,(err,salt)=>{
+    if (err){
+      return res.status(500).send({ message: err.toString() });
+    };
+    bcrypt.hash(pwdK,salt,(err,password_hash)=>{
+      if (err){
         return res.status(500).send({ message: err.toString() });
-      }
-      // req.session.user = { email: emailK, type: optK };
-      req.session.email =emailK;
-      req.session.type = optK;
-      const mailOptions = {
-        from: "nandinijindal010@gmail.com",
-        to: emailK,
-        subject: "Welcome to PillShare!",
-        html: `
-          Thank you for signing up with PillShare! <br>
-          You can now login to donate or take medicines.
-        `,
       };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.error("Error sending email:", error);
-          return res
-            .status(500)
-            .send({ message: "Signup successful (email sending failed)" });
-        } else {
-          console.log("Email sent:", info.response);
-          res.send({ message: "success" });  
+      dbRef.query(
+        "INSERT INTO coustomers(email, pwd, type, dos, status) VALUES (?, ?, ?, current_date(), 1)",
+        [emailK, password_hash, optK],
+        (err) => {
+          if (err) {
+            if (err.code === "ER_DUP_ENTRY") {
+              return res.status(409).send({ message: "email_exists" });
+            }
+            return res.status(500).send({ message: err.toString() });
+          }
+          // req.session.user = { email: emailK, type: optK };
+          req.session.email =emailK;
+          req.session.type = optK;
+          const mailOptions = {
+            from: "nandinijindal010@gmail.com",
+            to: emailK,
+            subject: "Welcome to PillShare!",
+            html: `
+              Thank you for signing up with PillShare! <br>
+              You can now login to donate or take medicines.
+            `,
+          };
+    
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.error("Error sending email:", error);
+              return res
+                .status(500)
+                .send({ message: "Signup successful (email sending failed)" });
+            } else {
+              console.log("Email sent:", info.response);
+               
+              if (optK === "Donor") {
+                res.redirect("./dash-donor.html")
+              } else if (optK === "Needy") {
+                res.redirect("./dash-needy.html");
+              } 
+              res.send({ message: "success" });  
+            }
+          });
         }
-      });
-    }
-  );
+      );
+       
+    })
+  });
 });
 
 // //==================================Node mailer=====================================
