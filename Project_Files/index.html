@@ -231,7 +231,7 @@
                             <label for="exampleInputPassword1" class="form-label">Password</label>
                             <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd" required>
                             <i id="pwd" class="fa-solid sign fa-eye-slash"></i>
-                        </div> 
+                        </div>
                         <div class="mb-3 dropdown w-full ">
                             <select class="btn btn-outline-success w-full" style="width: 100%" id="type">
                                 <option style="background-color: white;color: black;" value="Donor">Donor</option>
@@ -477,41 +477,39 @@
 
 </body>
 <script>
-function submitSignupForm(event) {
-    event.preventDefault(); // Prevent default form submission
-  
-    // Access form elements
-    const email = event.target.elements['txtEmail'].value;
-    const password = event.target.elements['txtPwd'].value;
-    const type = event.target.elements['type'].value;
-  
-    // Prepare data object
-    const data = {
-      emailK: email,
-      pwdK: password,
-      optK: type
-    };
-  
-    // Send fetch request (replace with URL from backend)
-    fetch('/signup', {
-      method: 'POST', // Use POST for creating data
-      body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === 'success') { 
-        loggedIn(); 
-      } else if (data.message === 'email_exists') {
-        alert('Email already exists. Please try a different email.');
-      } else {
-        console.warn('Signup failed: ' + data.message); // Handle other errors
-      }
-    })
-    .catch(error => {
-      alert('An error occurred during signup: ' + error); // Display error message
-    });
-  }
+    function submitSignupForm(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Access form elements
+        const email = event.target.elements['txtEmail'].value;
+        const password = event.target.elements['txtPwd'].value;
+        const type = event.target.elements['type'].value;
+ 
+        const data = {
+            emailK: email,
+            pwdK: password,
+            optK: type
+        };
+ 
+        fetch('/signup', {
+            method: 'POST',  
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'success') {
+                    loggedIn(type);
+                } else if (data.message === 'email_exists') {
+                    alert('Email already exists. Please try a different email.');
+                } else {
+                    console.warn('Signup failed: ' + data.message); // Handle other errors
+                }
+            })
+            .catch(error => {
+                alert('An error occurred during signup: ' + error); // Display error message
+            });
+    }
     function submitLoginForm(event) {
 
         event.preventDefault(); // Prevent default form submission
@@ -527,12 +525,16 @@ function submitSignupForm(event) {
         };
         fetch('/login', {
             method: 'POST',
-            body: JSON.stringify({ email: yourEmail, password: yourPassword })
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email, password: password })
         })
             .then(response => response.json())
             .then(data => {
-                if (data) {
-                    loggedIn(); 
+                console.log(data)
+                if (data.pass) {
+                    loggedIn(data.type);
                 } else {
                     alert('Login failed. Please check your credentials.');
                 }
@@ -545,33 +547,57 @@ function submitSignupForm(event) {
 
     const userControls = document.getElementById('user-controls');
     const logoutBtn = document.getElementById('logoutBtn');
-
-    // Check for logged-in user on page load
+ 
     checkLoggedInUser();
 
-    function checkLoggedInUser() {
-        const activeK = localStorage.getItem('activeK');
-        if (activeK) {
-            loggedIn();
-        } else {
-            // logout();
-        }
+    function checkLoggedInUser() { 
+        fetch('/check_user_status',{method:'POST'})
+        .then(response => response.json())
+        .then(data=>{
+            if (data.pass){
+                loggedIn(); 
+            }else{
+                // User is not logged in
+            }
+
+        })
     }
 
-    function loggedIn() {
+    function loggedIn(type) {
         logoutBtn.style.display = 'block';
         userControls.removeChild(document.getElementById('btnsign'));
         userControls.removeChild(document.getElementById('btnlogin'));
         logoutBtn.addEventListener('click', function () {
             logout();
         });
+        if (type=="Donor"){
+            window.location.href="./dash-donor.html"
+        }
+        else if(type="Needy"){
+            window.location.href="./dash-needy.html"            
+        }
     }
+    async function logout() {
+        try {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
 
-    function logout() {
-        logoutBtn.style.display = 'none';
-        localStorage.removeItem("activeK");
-        location.replace("/index.html");
-        return;
+            if (!response.ok) {
+                throw new Error('Error logging out');
+            }
+            const responseJson = await response.json();
+
+            if (responseJson.success) {
+                console.log('Logout successful! Redirecting to login...');
+                window.location.href = '/login';
+            } else {
+                console.error('Logout failed. Check server logs for details.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 </script>
 

@@ -131,13 +131,8 @@ app.post("/signup", (req, res) => {
                 .send({ message: "Signup successful (email sending failed)" });
             } else {
               console.log("Email sent:", info.response);
-               
-              if (optK === "Donor") {
-                res.redirect("./dash-donor.html")
-              } else if (optK === "Needy") {
-                res.redirect("./dash-needy.html");
-              } 
-              res.send({ message: "success" });  
+                
+              res.send({ message: "success",type :optK });  
             }
           });
         }
@@ -190,44 +185,49 @@ app.get("/chk-email", function (req, resp) {
     }
   );
 });
-
+app.post('/logout',(req,res)=>{
+  
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send({error:'Error logging out',success:false});
+    }
+    req.session = null;
+    return res.status(200).send({success:true});
+  });
+})
 //======================Login button Click=======================================
 app.post("/login", function (req, res) {
-  const { email, password } = req.body;
+  const { email, password } = req.body; 
   dbRef.query(
     "select type,status,pwd from coustomers where email=?",
     [email],
     function (err, resultJsonArray) {
       if (err) {
-        return res.status(500).send(err.toString()); 
+        res.status(500).send({ message:err.toString()}); 
       }
-      
       if (resultJsonArray.length === 1) {
-        hashed_password = resultJsonArray[0].pwd
+        hashed_password = resultJsonArray[0].pwd 
         const verified = bcrypt.compare(password,hashed_password);
         if (!verified) {
-          res.status(401).send({ message: "Invalid email/password" }); // Unauthorized (invalid credentials)
+           console.log(email,password)
+          res.status(401).send({ message: "Invalid email/password" ,pass:false}); // Unauthorized (invalid credentials)
 
         }else{
           if (resultJsonArray[0].status === 1) {
-            req.session.email = email;
             type = resultJsonArray[0].type
-  
+            req.session.email = email;
             req.session.type = type;          
-            // res.send(resultJsonArray[0].type);
-            if (type === "Donor") {
-              res.redirect("./dash-donor.html")
-            } else if (type === "Needy") {
-              res.redirect("./dash-needy.html");
-            } 
+   
+            res.status(200).send({ message: "LoggedIn",pass:true ,type:type}); 
             
           } else {
-            res.status(403).send({ message: "You are blocked" }); // Forbidden (blocked user)
+            res.status(403).send({ message: "You are blocked",pass:false }); // Forbidden (blocked user)
           }
         }
 
       } else {
-        res.status(401).send({ message: "Invalid email/password" }); // Unauthorized (invalid credentials)
+        res.status(401).send({ message: "Invalid email/password" ,pass:false}); // Unauthorized (invalid credentials)
       }
     }
   );
