@@ -68,11 +68,10 @@ var transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-app.post("/check_user_status", (req, res) => {
+app.post("/check_user_status", (req, res) => { 
   if (req.session.email) {
-    console.log(type);
     res.send({
-      status: "loggedin",
+      status: "loggedin", 
       email: req.session.email,
       type: req.session.type,
       pass: true,
@@ -217,11 +216,13 @@ app.post("/login", function (req, res) {
           if (resultJsonArray[0].status === 1) {
             type = resultJsonArray[0].type;
             req.session.email = email;
-            req.session.type = type;
-
-            res
-              .status(200)
-              .send({ message: "LoggedIn", pass: true, type: type });
+            if(email=='admin@pillshare.com'){
+              req.session.type = 'Admin';
+              res.status(200).send({ message: "LoggedIn", pass: true, type: 'Admin'});
+            }else{
+              req.session.type = type;
+              res.status(200).send({ message: "LoggedIn", pass: true, type: type });
+            }
           } else {
             res.status(403).send({ message: "You are blocked", pass: false }); // Forbidden (blocked user)
           }

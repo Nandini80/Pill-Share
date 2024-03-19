@@ -10,6 +10,24 @@
 
   <script src="script/angular.min.js"></script>
   <script>
+checkLoggedInUser()
+    function checkLoggedInUser() {
+      fetch('/check_user_status', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => { 
+          if (data.pass) {
+            if (data.type != "Admin") { 
+              window.location.href = "index.html";
+
+            } 
+          } else {
+            window.location.href = "index.html";
+          }
+  
+        })
+    }
+  </script>
+  <script>
     var module = angular.module("Mymodule", []);
     module.controller("Mycontroller", function ($scope, $http) {
       $scope.jsonArray;

@@ -60,10 +60,7 @@
       fetch("/check_user_status", { method: "POST" })
         .then((response) => response.json())
         .then((data) => {
-          if (data.pass) {
-            if (data.type == "Needy") {
-              location.href = "./dash-needy.html";
-            }
+          if (data.pass) { 
             email_element = document.getElementById("txtEmail");
             email_element.value = data.email;
           } else {

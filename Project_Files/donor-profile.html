@@ -59,11 +59,7 @@
         fetch('/check_user_status', { method: 'POST' })
           .then(response => response.json())
           .then(data => {
-            if (data.pass) {
-              if (data.type == "Needy") {
-                location.href = "./dash-needy.html"
-              }
-              $("#PrintDonor").html(data.email);
+            if (data.pass) {  
               $("#txtEmail").val(data.email).prop("readonly", true);
             } else {
               window.location.href = "index.html";
