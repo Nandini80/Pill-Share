@@ -46,7 +46,7 @@ app.get("/", function (req, resp) {
 //     dateStrings: true
 // };
 
-var dbConfig = {
+const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -54,8 +54,28 @@ var dbConfig = {
   dateStrings: true,
 };
 
-var dbRef = mysql.createConnection(dbConfig);
-dbRef.connect(function (err) {
+const handleDisconnect = () => {
+  connection = mysql.createConnection(dbConfig);
+
+  connection.connect(function (err) {
+    if (err) {
+      console.log("error when connecting to db:", err);
+      setTimeout(handleDisconnect, 2000);
+    }
+  });
+  connection.on("error", (err) => {
+    console.log("db error", err);
+    if (err.code === "PROTOCOL_CONNECTION_LOST") {
+      handleDisconnect();
+    } else {
+      console.error(err);
+    }
+  });
+};
+
+handleDisconnect();
+
+dbRef.connect((err) => {
   if (err == null) console.log("Connected successfullyyyyy");
   else console.log(err);
 });
@@ -68,13 +88,13 @@ var transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-app.post("/check_user_status", (req, res) => { 
+app.post("/check_user_status", (req, res) => {
   if (req.session.email) {
-    if (req.session.email=="admin@pillshare.com"){
-      req.session.type="Admin";
+    if (req.session.email == "admin@pillshare.com") {
+      req.session.type = "Admin";
     }
     res.send({
-      status: "loggedin", 
+      status: "loggedin",
       email: req.session.email,
       type: req.session.type,
       pass: true,
@@ -101,38 +121,37 @@ app.post("/signup", (req, res) => {
           if (err) {
             if (err.code === "ER_DUP_ENTRY") {
               return res.status(409).send({ message: "email_exists" });
-            }
-            else{
+            } else {
               return res.status(500).send({ message: err.toString() });
             }
-          }
-          else{
- 
-          // req.session.user = { email: emailK, type: optK };
-          req.session.email = emailK;
-          req.session.type = optK;
-          const mailOptions = {
-            from: "nandinijindal010@gmail.com",
-            to: emailK,
-            subject: "Welcome to PillShare!",
-            html: `
+          } else {
+            // req.session.user = { email: emailK, type: optK };
+            req.session.email = emailK;
+            req.session.type = optK;
+            const mailOptions = {
+              from: "nandinijindal010@gmail.com",
+              to: emailK,
+              subject: "Welcome to PillShare!",
+              html: `
               Thank you for signing up with PillShare! <br>
               You can now login to donate or take medicines.
             `,
-          };
+            };
 
-          transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-              console.error("Error sending email:", error);
-              return res
-                .status(500)
-                .send({ message: "Signup successful (email sending failed)" });
-            } else {
-              console.log("Email sent:", info.response); 
-              res.send({ message: "success", type: optK });
-            }
-          });
-        }
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                console.error("Error sending email:", error);
+                return res
+                  .status(500)
+                  .send({
+                    message: "Signup successful (email sending failed)",
+                  });
+              } else {
+                console.log("Email sent:", info.response);
+                res.send({ message: "success", type: optK });
+              }
+            });
+          }
         }
       );
     });
@@ -223,12 +242,16 @@ app.post("/login", function (req, res) {
           if (resultJsonArray[0].status === 1) {
             type = resultJsonArray[0].type;
             req.session.email = email;
-            if(email=='admin@pillshare.com'){
-              req.session.type = 'Admin';
-              res.status(200).send({ message: "LoggedIn", pass: true, type: 'Admin'});
-            }else{
+            if (email == "admin@pillshare.com") {
+              req.session.type = "Admin";
+              res
+                .status(200)
+                .send({ message: "LoggedIn", pass: true, type: "Admin" });
+            } else {
               req.session.type = type;
-              res.status(200).send({ message: "LoggedIn", pass: true, type: type });
+              res
+                .status(200)
+                .send({ message: "LoggedIn", pass: true, type: type });
             }
           } else {
             res.status(403).send({ message: "You are blocked", pass: false }); // Forbidden (blocked user)
@@ -546,14 +569,14 @@ app.post("/profile-needy-update", function (req, resp) {
     }
   );
 });
- 
+
 //===================================Needy settings==============================
-app.get("/needy-settings-update-pwd", function (req, resp) { 
+app.get("/needy-settings-update-pwd", function (req, resp) {
   var newpwd = req.query.np;
   var oldpwd = req.query.op;
-  var compwd = req.query.cp;    
-  console.log(oldpwd)
-  console.log(newpwd) 
+  var compwd = req.query.cp;
+  console.log(oldpwd);
+  console.log(newpwd);
 
   if (newpwd != oldpwd) {
     if (newpwd == compwd) {
