@@ -455,10 +455,19 @@ app.post("/profile-needy-update", function (req, resp) {
 });
 
 //===================================Needy settings==============================
+<<<<<<< Updated upstream
 app.get("/needy-settings-update-pwd", function (req, resp) {
     var newpwd = req.query.np;
     var oldpwd = req.query.op;
     var compwd = req.query.cp;
+=======
+app.post("/needy-settings-update-pwd", function (req, resp) {
+  var newpwd = req.query.np;
+  var oldpwd = req.query.op;
+  var compwd = req.query.cp;    
+  console.log(oldpwd)
+  console.log(newpwd)
+>>>>>>> Stashed changes
 
     if (newpwd != oldpwd) {
         if (newpwd == compwd) {
