@@ -33,8 +33,11 @@ app.use(express.static("Project_Files"));
 app.use(fileuploader());
 app.use(express.urlencoded(true));
 
+// app.get("/", function (req, resp) {
+//   resp.send(process.cwd() + "/Project_Files/index.html");
+// });
 app.get("/", function (req, resp) {
-  resp.send(process.cwd() + "/Project_Files/index.html");
+  resp.send("./index.html");
 });
 
 //Connect to sql
