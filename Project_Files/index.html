@@ -153,7 +153,7 @@
     }
 </script>
 
-<body onload="dosetInterval();" background="pics_used/medbg3.jpg">
+<body id="body" onload="loader();light();showhome()">
     <!-- =============================NavBar ====================================-->
     <nav class="navbar navbar-expand-lg" style="height: 50px;background-color: white;">
         <div class="container-fluid">
@@ -183,7 +183,7 @@
                         </ul>
                     </li>
                     <li class="nav-item ms-2">
-                        <a class="nav-link" href="#aboutUs">About Us</a>
+                        <a class="nav-link" href="#contact">About Us</a>
                     </li>
                     <li class="nav-item ms-2">
                         <a class="nav-link" href="#contact">Contact Us</a>
@@ -193,17 +193,17 @@
                     </li>
                 </ul>
                 <form class="d-flex" role="search" id="user-controls">
-                    <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-3" data-bs-toggle="modal"
+                    <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-1" data-bs-toggle="modal"
                         data-bs-target="#modalsign">SignUp</button>
-                    <button type="button" id="btnlogin" class="btn btn-outline-success mt-3" data-bs-toggle="modal"
+                    <button type="button" id="btnlogin" class="btn btn-outline-success mt-1" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">Login</button>
                     <button type="button" class="btn btn-outline-danger mt-3" id="logoutBtn"
                         style="display: none;">Logout</button>
                 </form>
-
-            </div>
+                
         </div>
     </nav>
+
 
     <!-- ===============================Modal of signup=========================== -->
     <div class="modal fade" id="modalsign" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -362,7 +362,7 @@
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
                 aria-label="Slide 3"></button>
         </div>
-        <center>
+  
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img src="pics_used/charity.jpg" class="rounded d-block w-60" style="height: 500px;width: 100%;"
@@ -377,7 +377,7 @@
                         alt="not available">
                 </div>
             </div>
-        </center>
+   
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
             data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -396,8 +396,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-7 ms-5 mt-4">
-                <span id="donate" class="fs-2 offset-md-3">Donate for someone to live</span>
-                <p class="text-center fs-4">Your Donation can have significant impact on the health and well-being of
+                <span id="donate" class="fs-2 offset-md-3 ">Donate for someone to live</span>
+                <p class="text-center fs-3">Your Donation can have significant impact on the health and well-being of
                     communities, especially in regions where access to healthcare and essential medications is limited.
                     If there are medicines in your Homes/Shops which are no more needed then you can Donate
                     them on our website.</p>
@@ -442,7 +442,7 @@
 
     <div class="wrapper">
         <br>
-        <h1 class="about1">About Us</h1>
+        <h1 class="contact">About Us</h1>
         <div class="team">
             <div class="team_member">
                 <div class="team_img">
@@ -472,6 +472,7 @@
         Contact Us at nandinijindal010@gmail.com
     </div>
     </div>
+    <div class="loader"></div>
 
 
 
@@ -600,5 +601,6 @@
         }
     }
 </script>
+
 
 </html>
