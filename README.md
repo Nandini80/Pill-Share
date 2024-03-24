@@ -11,7 +11,7 @@ Hosted link- https://pill-share.onrender.com
 - [Get Involved](#get-involved)
 - [Technologies](#technologies)
 - [Project Setup](#project-setup)
-- [Contribution](#contribution guidelines)
+- [Contribution](#contribution-guidelines)
 
 
 ## About Pill Share
