@@ -16,77 +16,76 @@
       }
     }
 
-    $(document).ready(function () 
-    {
+    $(document).ready(function () {
       $("#btnSearch").click(function () {
         var emailKuch = $("#txtEmail").val();
         var obj = {
-          type: "get",
+          type: "post",
           url: "/get-json-records",
           data: { key1: emailKuch }
         }
 
-        $.ajax(obj).done(function (respJSONKuch) 
-        {
-          if(respJSONKuch=="0")
-          {
-            $("#save").prop("disabled",false);
+        $.ajax(obj).done(function (respJSONKuch) {
+          if (respJSONKuch == "0") {
+            $("#save").prop("disabled", false);
           }
           else {
-          $("#updt").prop("disabled", false);
-          $("#txtName").val(respJSONKuch[0].name);
-          $("#txtCity").val(respJSONKuch[0].city);
-          $("#txtNum").val(respJSONKuch[0].cont);
-          $("#txtState").val(respJSONKuch[0].state);
-          $("#txtAdd1").val(respJSONKuch[0].add1);
-          $("#txtAdd2").val(respJSONKuch[0].add2);
-          $("#gender").val(respJSONKuch[0].gen);
-          $("#proof").val(respJSONKuch[0].proof_id);
-          $("#imgPrev").prop("src", "pics_used/" + respJSONKuch[0].picname);
-          $("#hdn").val(respJSONKuch[0].picname);
-         
-          var avail_hours = respJSONKuch[0].avail_hours.split("-");
-          var avf = avail_hours[0];
-          var avt = avail_hours[1];
+            $("#updt").prop("disabled", false);
+            $("#txtName").val(respJSONKuch[0].name);
+            $("#txtCity").val(respJSONKuch[0].city);
+            $("#txtNum").val(respJSONKuch[0].cont);
+            $("#txtState").val(respJSONKuch[0].state);
+            $("#txtAdd1").val(respJSONKuch[0].add1);
+            $("#txtAdd2").val(respJSONKuch[0].add2);
+            $("#gender").val(respJSONKuch[0].gen);
+            $("#proof").val(respJSONKuch[0].proof_id);
+            $("#imgPrev").prop("src", "pics_used/" + respJSONKuch[0].picname);
+            $("#hdn").val(respJSONKuch[0].picname);
 
-          $("#avail1").val(avf);
-          $("#avail2").val(avt);
-        }
+            var avail_hours = respJSONKuch[0].avail_hours.split("-");
+            var avf = avail_hours[0];
+            var avt = avail_hours[1];
+
+            $("#avail1").val(avf);
+            $("#avail2").val(avt);
+          }
         }).fail(function (err) {
           alert(err);
         });
       });
       //==============For email already filled================
-      setActiveUser();
-      function setActiveUser() 
-      {
-        if (localStorage.getItem("activeK") == undefined) 
-        {
-          location.href = "index.html";
-          return;
-        }
+      checkLoggedInUser()
+      function checkLoggedInUser() {
+        fetch('/check_user_status', { method: 'POST' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.pass) {  
+              $("#txtEmail").val(data.email).prop("readonly", true);
+            } else {
+              window.location.href = "index.html";
+            }
 
-        var au = localStorage.getItem("activeK");
-        $("#txtEmail").val(au).prop("readonly", true);
+          })
       }
+
     });
   </script>
 </head>
 
-<body style="width: 100%;">
+<body style="width: 100%;" onload="checkLoggedInUser()">
 
   <!-- ========================Nav bar================================ -->
-    <nav class="navbar navbar-expand-lg">
-      <div class="col-md-12">
-        <a class="navbar-brand" href="#">
-          <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
-            class="d-inline-block align-text-top ms-3">
-          <span class="text-black" style="font-size: larger;">PiLLshArE</span>
-        </a>
-      </div>
-    </nav>
-    <!-- =========================Form================================= -->
-    <div class="container-fluid">
+  <nav class="navbar navbar-expand-lg">
+    <div class="col-md-12">
+      <a class="navbar-brand" href="#">
+        <img src="pics_used/medical logo - Copy.jpg" alt="Logo" width="60" height="44"
+          class="d-inline-block align-text-top ms-3">
+        <span class="text-black" style="font-size: larger;">PiLLshArE</span>
+      </a>
+    </div>
+  </nav>
+  <!-- =========================Form================================= -->
+  <div class="container-fluid">
     <form class="row g-3 ms-4" method="post" enctype="multipart/form-data">
       <input type="hidden" id="hdn" name="hdn">
       <div class="row">
@@ -95,7 +94,7 @@
         </div>
         <div class="col-md-5 offset-md-3 mt-2">
           <label for="txtEmail" class="form-label mt-3">Email</label>
-          <input type="email" name="txtEmail" id="txtEmail" placeholder="Email Address" class="form-control">
+          <input type="email" name="txtEmail" id="txtEmail" placeholder="Email Address" class="form-control" required>
         </div>
         <div class="col-md-2 mt-5 mb-4">
           <input type="button" id="btnSearch" class="btn btn-primary mt-2" value="search">
@@ -103,19 +102,19 @@
         <div class="col-md-4 offset-md-1 me-4">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           Name
-          <input type="text" id="txtName" name="txtName" placeholder="Name" 
-            class="form-control ms-4 mt-2" aria-label="First name">
+          <input type="text" id="txtName" name="txtName" placeholder="Name" class="form-control ms-4 mt-2"
+            aria-label="First name" required>
         </div>
         <div class="col-md-4 ">
           <label for="txtNum" class="form-label">Contact</label>
-          <input type="text" name="txtNum" class="form-control"  id="txtNum" maxlength="10"
-            placeholder="Mobile Number">
+          <input type="text" name="txtNum" class="form-control" id="txtNum" maxlength="10" placeholder="Mobile Number"
+            required>
         </div>
       </div>
       <div class="col-md-9 offset-md-1 mt-3">
         <label for="txtAdd1" class="form-label">Address</label>
-        <input type="text" name="txtAdd1" class="form-control" id="txtAdd1" 
-          placeholder="Apartment, studio, or floor address 1">
+        <input type="text" name="txtAdd1" class="form-control" id="txtAdd1"
+          placeholder="Apartment, studio, or floor address 1" required>
       </div>
       <div class="col-md-9 offset-md-1 mt-3 mb-2">
         <label for="txtAdd2" class="form-label">Address 2</label>
@@ -125,12 +124,12 @@
       <div class="row">
         <div class="col-md-4 offset-md-1 mt-3">
           <label for="txtCity" class="form-label">City</label>
-          <input type="text" name="txtCity" class="form-control" id="txtCity" placeholder="City">
+          <input type="text" name="txtCity" class="form-control" id="txtCity" placeholder="City" required>
         </div>
         <!-- placeholder=name -->
         <div class="col-md-4 mt-3 mb-3">
           <label for="txtState" class="form-label">State</label>
-          <input list="mylist" id="txtState" name="txtState" class="form-control" placeholder="State">
+          <input list="mylist" id="txtState" name="txtState" class="form-control" placeholder="State" required>
           <datalist id="mylist">
             <option selected>Choose...</option>
             <option value="Punjab">Pjb</option>
@@ -150,7 +149,7 @@
         </div>
         <div class="col-md-3 ms-4 mt-3">
           <label class="form-label">Gender</label>
-          <select class="form-select" name="gender" id="gender" aria-label="Default select example">
+          <select class="form-select" name="gender" id="gender" aria-label="Default select example" required>
             <option selected>Select</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -161,7 +160,7 @@
       <div class="row">
         <div class="col-md-3 offset-md-1 mt-3 me-5">
           <label class="form-label">ID Proof</label>
-          <select class="form-select" id="proof" name="proof" aria-label="Default select example">
+          <select class="form-select" id="proof" name="proof" aria-label="Default select example" required>
             <option selected>Select</option>
             <option value="aadhaar">Aadhaar Card</option>
             <option value="drive">Driving license</option>
@@ -180,8 +179,10 @@
         </div>
       </div>
       <div class="col-4 offset-md-5">
-        <button type="submit" id="save" class="btn btn-primary ms-4 mb-4 mt-1" formaction="/profile-donor-save" disabled>Save</button>
-        <button type="submit" id="updt" class="btn btn-primary ms-2 mb-4 mt-1" formaction="/profile-donor-update" disabled>Update</button>
+        <button type="submit" id="save" class="btn btn-primary ms-4 mb-4 mt-1" formaction="/profile-donor-save"
+          disabled>Save</button>
+        <button type="submit" id="updt" class="btn btn-primary ms-2 mb-4 mt-1" formaction="/profile-donor-update"
+          disabled>Update</button>
       </div>
     </form>
   </div>

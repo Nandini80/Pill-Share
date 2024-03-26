@@ -15,61 +15,11 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!-- JQuery link -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <script>
     $(document).ready(function () {
-        //=================Sign-Up script on submit clcik=======================
-        $("#show").click(function () {
-            var emailKuch = $("#txtEmail").val();
-            var pwdKuch = $("#txtPwd").val();
-            var optKuch = $("#type").val();
-            var obj = {
-                type: "get",
-                url: "/ajax-signup",
-                data: {
-                    emailK: emailKuch,
-                    pwdK: pwdKuch,
-                    optK: optKuch
-                }
-            }
-            $.ajax(obj).done(function (respKuch) {
-                //  alert(JSON.stringify(respKuch));
-                $("#result").html(respKuch);
-            }).fail(function (errKuch) {
-                //   alert(JSON.stringify(errKuch));
-                $("#result").html(errKuch);
-            })
-
-        });
-
-        //==================After clicking Login button======================== 
-        $("#btnloginsub").click(function () {
-            var emailKu = $("#emaillog").val();
-            var pwdKu = $("#pwdlog").val();
-            var obj = {
-                type: "get",
-                url: "/login-ajax",
-                data: {
-                    eml: emailKu,
-                    pd: pwdKu
-                }
-            }
-            $.ajax(obj).done(function (respKuch) {
-                localStorage.setItem("activeK", $("#emaillog").val()); // For Email by default in inputText
-                if (respKuch == "Donor")
-                    location.href = "dash-donor.html";
-                else {
-                    if (respKuch == "Needy")
-                        location.href = "dash-needy.html";
-
-                    else
-                        alert(JSON.stringify(respKuch));
-                }
-            }).fail(function (err) {
-                alert(err);
-            });
-        });
         //=================================Otp send button=========================
         var otpSent;
         $("#otp").click(function () {
@@ -90,8 +40,7 @@
 
         //======================On click of submit after entering otp==============
         var resp;
-        $("#otpsub").click(function () 
-        { 
+        $("#otpsub").click(function () {
             var otptext = $("#txtotp").val();
             var emailo = $("#emailfgt").val();
             var obj =
@@ -99,59 +48,55 @@
                 type: "get",
                 url: "/click-submit-after-filling-otp",
                 data:
-                    { otptx: otptext,
-                      otpst:  otpSent,
-                      key1 : emailo
-                    }
+                {
+                    otptx: otptext,
+                    otpst: otpSent,
+                    key1: emailo
+                }
             }
-            $.ajax(obj).done(function (respKuch) 
-            {  
-                   resp = respKuch;                 //nandinijindal41@gmail.com
-                   doOpen();
+            $.ajax(obj).done(function (respKuch) {
+                resp = respKuch;                 //nandinijindal41@gmail.com
+                doOpen();
                 //  alert(JSON.stringify(respKuch));
             }).fail(function (errKuch) {
-                  alert(JSON.stringify(errKuch));
+                alert(JSON.stringify(errKuch));
                 // $("#result").html(errKuch);
             })
         });
 
         //=======================Reset of password ===============================
-        $("#updpwd").click(function(){
+        $("#updpwd").click(function () {
             var emailo = $("#emailfgt").val();
             var newpwd = $("#newpwd").val();
             var conpwd = $("#compwd").val();
 
-            var obj={
-                type:"get",
+            var obj = {
+                type: "get",
                 url: "/reset-pwd-in-login",
-                data:{
-                    eml : emailo,
-                    np : newpwd,
-                    cp : conpwd
+                data: {
+                    eml: emailo,
+                    np: newpwd,
+                    cp: conpwd
                 }
             }
-            $.ajax(obj).done(function(resp)
-            {
-              $("#space").html(resp);
-            }).fail(function(err){
-              $("#space").html(err);
+            $.ajax(obj).done(function (resp) {
+                $("#space").html(resp);
+            }).fail(function (err) {
+                $("#space").html(err);
             });
         });
 
 
         //======================
-        function doOpen()
-        {
-          alert(resp);
-          if(resp=="Invalid OTP")
-          {
-            $("#forgot").modal('show');
-          }
-          else
-          {
-            $("#Modal").modal('show');
-            $("#forgot").modal('hide');
-          }
+        function doOpen() {
+            alert(resp);
+            if (resp == "Invalid OTP") {
+                $("#forgot").modal('show');
+            }
+            else {
+                $("#Modal").modal('show');
+                $("#forgot").modal('hide');
+            }
         }
         //======================Email in signup valid or not ======================
         $("#txtEmail").blur(function () {
@@ -208,7 +153,7 @@
     }
 </script>
 
-<body onload="dosetInterval();" background="pics_used/medbg3.jpg">
+<body id="body" onload="loader();light();showhome()">
     <!-- =============================NavBar ====================================-->
     <nav class="navbar navbar-expand-lg" style="height: 50px;background-color: white;">
         <div class="container-fluid">
@@ -238,7 +183,7 @@
                         </ul>
                     </li>
                     <li class="nav-item ms-2">
-                        <a class="nav-link" href="#aboutUs">About Us</a>
+                        <a class="nav-link" href="#contact">About Us</a>
                     </li>
                     <li class="nav-item ms-2">
                         <a class="nav-link" href="#contact">Contact Us</a>
@@ -247,15 +192,18 @@
                         <a class="nav-link" href="temsAndConditions.html">Terms and Conditions</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-3" data-bs-toggle="modal"
+                <form class="d-flex" role="search" id="user-controls">
+                    <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-1" data-bs-toggle="modal"
                         data-bs-target="#modalsign">SignUp</button>
-                    <button type="button" id="btnlogin" class="btn btn-outline-success mt-3" data-bs-toggle="modal"
+                    <button type="button" id="btnlogin" class="btn btn-outline-success mt-1" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">Login</button>
+                    <button type="button" class="btn btn-outline-danger mt-3" id="logoutBtn"
+                        style="display: none;">Logout</button>
                 </form>
-            </div>
+                
         </div>
     </nav>
+
 
     <!-- ===============================Modal of signup=========================== -->
     <div class="modal fade" id="modalsign" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -266,7 +214,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="signupForm" method="post" onsubmit="submitSignupForm(event)">
                         <div class="mb-1">
                             <center>
                                 <img src="pics_used/userlogin.png" style="width: 80px;height: 80px;">
@@ -275,26 +223,22 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <span id="astk">*</span>
-                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail" autofocus>
-                            <i class="fa-solid fa-user"></i> 
+                            <input type="email" class="border col-md-11 me-2 p-2 rounded" id="txtEmail" autofocus
+                                required>
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password</label>
-                            <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd">
-                            <i id="pwd" class="fa-solid sign fa-eye-slash"></i> 
+                            <input type="password" class="border col-md-11 me-2 p-2 rounded" id="txtPwd" required>
+                            <i id="pwd" class="fa-solid sign fa-eye-slash"></i>
                         </div>
-                        <div class="mb-3">
-                            <span class="me-2"> Date of signup</span>
-                            <input type="date"
-                                style="border-radius: 7px 7px 7px 7px;padding: 4px 4px 4px 4px;width: 130px;border-color:lightcyan">
-                        </div>
-                        <div class="mb-3 dropdown">
-                            <select class="btn btn-outline-success" id="type">
+                        <div class="mb-3 dropdown w-full ">
+                            <select class="btn btn-outline-success w-full" style="width: 100%" id="type">
                                 <option style="background-color: white;color: black;" value="Donor">Donor</option>
                                 <option style="background-color: white;color: black;" value="Needy">Needy</option>
                             </select>
                         </div>
-                        <button type="button" id="show" class="btn btn-primary offset-md-5">Submit</button>
+                        <input type="submit" id="show" class="btn btn-primary offset-md-5"></input>
                         <span id="result"></span>
                         </center>
                     </form>
@@ -315,21 +259,26 @@
                     <img src="pics_used/profile_needy_img.jpg" style="width: 135px; height: 135px;">
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="loginForm" method="post" onsubmit="submitLoginForm(event)">
                         <div class="mb-2">
                             <label for="emaillog" class="form-label">Email address</label><br>
-                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" name="emaillog">
+                            <input type="email" class="border col-md-11 p-2 me-2 rounded" id="emaillog" required
+                                name="emaillog">
                             <i class="fa-solid fa-user"></i> <!-- Added fa-user class for static person icon -->
                         </div>
                         <div class="mb-3">
                             <label for="pwdlog" class="form-label">Password</label><br>
-                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog" name="pwdlog">
-                            <i class="fa-solid fa-eye-slash"></i> <!-- Kept the fa-solid class for eye/eye-slash toggle -->
+                            <input maxlength="20" type="password" class="border col-md-11 me-2 p-2 rounded" id="pwdlog"
+                                required name="pwdlog">
+                            <i class="fa-solid fa-eye-slash"></i>
+                            <!-- Kept the fa-solid class for eye/eye-slash toggle -->
                         </div>
                         <div class="mb-3">
-                            <a data-bs-toggle="modal" data-bs-target="#forgot" id="fgt" class="mt-2">Forgot Password?</a>
+                            <a data-bs-toggle="modal" data-bs-target="#forgot" id="fgt" class="mt-2">Forgot
+                                Password?</a>
                         </div>
-                        <button type="button" class="btn btn-primary offset-md-5" id="btnloginsub">LOGIN</button>
+                        <input type="submit" class="btn btn-primary offset-md-5" id="btnloginsub"
+                            value="Login"></button>
                     </form>
 
                 </div>
@@ -341,7 +290,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1>class="modal-title fs-5 offset-md-4" id="exampleModalLabel">Reset Password</h1>
+                    <h1 class="modal-title fs-5 offset-md-4" id="exampleModalLabel">Reset Password</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -358,15 +307,16 @@
                                 <div class="mb-2 mt-1">
                                     <span class="col-md-4">Enter Your Email Address here</span>
                                     <input type="email" class="border col-md-9 mt-2 p-2 rounded" id="emailfgt"
-                                        placeholder="Email Address" name="emaillog">
-                                    <button type="button" class="btn btn-primary ms-1 mb-2" id="otp">Send OTP</button>
+                                        placeholder="Email Address" name="emaillog" required>
+                                    <input="submit" class="btn btn-primary ms-1 mb-2" id="otp" value="Send OTP">
+                                        </button>
                                 </div>
                             </form>
                             <div>
                                 <span class="col-md-4">Enter Your OTP here</span>
                                 <input type="text" class="border col-md-9 p-2 mt-2 rounded" id="txtotp"
-                                    placeholder="Enter OTP" name="txtotp">
-                                <button type="button" class="btn btn-primary ms-3 mb-2" id="otpsub">Submit</button>
+                                    placeholder="Enter OTP" name="txtotp" required>
+                                <input type="submit" class="btn btn-primary ms-3 mb-2" id="otpsub"></button>
                             </div>
                         </div>
                     </div>
@@ -412,7 +362,7 @@
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
                 aria-label="Slide 3"></button>
         </div>
-        <center>
+  
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img src="pics_used/charity.jpg" class="rounded d-block w-60" style="height: 500px;width: 100%;"
@@ -427,7 +377,7 @@
                         alt="not available">
                 </div>
             </div>
-        </center>
+   
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
             data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -441,13 +391,13 @@
     </div>
 
     <!-- ======================================================================= -->
-    <div class="mt-3 fs-1" style="text-align: center;">
+    <div class="mt-3 fs-1" style="text-align: center; font-weight: bold;">
         Features And Functionalities</div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-7 ms-5 mt-4">
-                <span id="donate" class="fs-2 offset-md-3">Donate for someone to live</span>
-                <p class="text-center fs-4">Your Donation can have significant impact on the health and well-being of
+                <span id="donate" class="fs-2 offset-md-3 ">Donate for someone to live</span>
+                <p class="text-center fs-3">Your Donation can have significant impact on the health and well-being of
                     communities, especially in regions where access to healthcare and essential medications is limited.
                     If there are medicines in your Homes/Shops which are no more needed then you can Donate
                     them on our website.</p>
@@ -488,60 +438,169 @@
             </div>
         </div>
     </div>
-    <div class="text-bg-success " style="width: 100%; height: 70%">
-        <div id="aboutUs" class="fs-2 mt-2" style="color: white; text-align: center;">
-            About Us
-        </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6 mb-2">
-                    <div class="card mb-3 text-bg-success border border-success" style="max-width: 540px;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="pics_used/mine2.jpeg" class="mt-5"
-                                    style="border-radius:20%; width: 200px; height: 200px;" alt="Not available">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title  offset-md-3 fs-3 text-light mt-2">Developed By</h5>
-                                    <p class="card-text text-light ms-3 fs-5 text-center">Hi there, I am Nandini Jindal
-                                        the founder of this
-                                        website. Currently persuing Btech from Jaypee institue of technology,Noida in
-                                        Computer
-                                        science branch.I am very happy to introduce you my very first website <span
-                                            style="font-weight: bold;">PiLLshArE</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+
+    <div class="wrapper">
+        <br>
+        <h1 class="contact">About Us</h1>
+        <div class="team">
+            <div class="team_member">
+                <div class="team_img">
+                    <img src="pics_used/mine2.jpeg" alt="Team_image">
                 </div>
-                <div class="col-md-6 mb-2">
-                    <div class="card mb-3 text-bg-success border border-success" style="max-width: 540px;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="pics_used/sir.jpeg" class="mt-5"
-                                    style="border-radius:20%; width: 200px; height: 200px;" alt="Not available">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title offset-md-1 fs-3 text-light mt-2">Under The Guidance of</h5>
-                                    <p class="card-text text-light fs-5 ms-4 text-center">I am able to Develop this site
-                                        only because of my
-                                        sir, Mr.Rajesh Bansal (the author of REAL JAVA).
-                                        He helped me in every aspect. He is the Brain of this Website. Thankyou sir for
-                                        all your
-                                        Guidance and support.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h3>Nandini Jindal</h3>
+                <p class="role">Developed By</p>
+                <p>Hi there, I am <b>Nandini Jindal</b> the founder of this website. Currently persuing Btech from
+                    Jaypee institue of technology, Noida in Computer science branch. I am very happy to introduce you my
+                    very first website <b>PiLLshArE</b></p>
+            </div>
+            <div class="team_member">
+                <div class="team_img">
+                    <img src="pics_used/sir.jpeg" alt="Team_image">
                 </div>
+                <h3>Mr.Rajesh Bansal</h3>
+                <p class="role">Under The Guidance of</p>
+                <p>I am able to Develop this site only because of my sir, <b>Mr.Rajesh Bansal</b> (the author of REAL
+                    JAVA). He helped me in every aspect. He is the Brain of this Website. Thankyou sir for all your
+                    Guidance and support.</p>
             </div>
         </div>
-        <div class="text-center fs-3 mb-1" id="contact">
-            Contact Us at nandinijindal010@gmail.com
-        </div>
     </div>
+
+    </div>
+    <div class="text-center fs-3 mb-1" id="contact" style="font-weight: 700;">
+        Contact Us at nandinijindal010@gmail.com
+    </div>
+    </div>
+
+
+
+
 </body>
+<script>
+    function submitSignupForm(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Access form elements
+        const email = event.target.elements['txtEmail'].value;
+        const password = event.target.elements['txtPwd'].value;
+        const type = event.target.elements['type'].value;
+
+        const data = {
+            emailK: email,
+            pwdK: password,
+            optK: type
+        };
+
+        fetch('/signup', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'success') {
+                    loggedIn(type);
+                } else if (data.message === 'email_exists') {
+                    alert('Email already exists. Please try a different email.');
+                } else {
+                    console.warn('Signup failed: ' + data.message); // Handle other errors
+                }
+            })
+            .catch(error => {
+                alert('An error occurred during signup: ' + error); // Display error message
+            });
+    }
+    function submitLoginForm(event) {
+
+        event.preventDefault();
+        const email = event.target.elements['emaillog'].value;
+        const password = event.target.elements['pwdlog'].value;
+
+        const data = {
+            emailK: email,
+            pwdK: password,
+        };
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email, password: password })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                if (data.pass) {
+                    loggedIn(data.type);
+                } else {
+                    alert('Login failed. Please check your credentials.');
+                }
+            })
+            .catch(error => {
+                alert('An error occurred during login: ' + error);
+            });
+    }
+
+
+    const userControls = document.getElementById('user-controls');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    checkLoggedInUser();
+
+    function checkLoggedInUser() {
+        fetch('/check_user_status', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.pass) {
+                    loggedIn();
+                } else {
+                    // User is not logged in
+                }
+
+            })
+    }
+
+    function loggedIn(type) {
+        logoutBtn.style.display = 'block';
+        userControls.removeChild(document.getElementById('btnsign'));
+        userControls.removeChild(document.getElementById('btnlogin'));
+        logoutBtn.addEventListener('click', function () {
+            logout();
+        });
+        if (type == "Donor") {
+            window.location.href = "./dash-donor.html"
+        }
+        else if (type = "Needy") {
+            window.location.href = "./dash-needy.html"
+        }
+        else if (type = "Admin") {
+            window.location.href = "./dash-admin.html"
+        }
+    }
+    async function logout() {
+        try {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Error logging out');
+            }
+            const responseJson = await response.json();
+
+            if (responseJson.success) {
+                console.log('Logout successful! Redirecting to login...');
+                window.location.href = '/login';
+            } else {
+                console.error('Logout failed. Check server logs for details.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+</script>
+
 
 </html>
