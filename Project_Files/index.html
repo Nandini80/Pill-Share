@@ -14,6 +14,8 @@
     <!-- JQuery link -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.min.css" rel="stylesheet">
+
 </head>
 
 <script>
@@ -22,12 +24,12 @@
         element.classList.toggle("dark-mode");
         var icon = document.querySelector('#themeToggle i');
     if (element.classList.contains('dark-mode')) {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon-o');
+        icon.classList.remove('bi-sun');
+        icon.classList.add('bi-moon');
         icon.style.color = 'white';
     } else {
-        icon.classList.remove('fa-moon-o');
-        icon.classList.add('fa-sun');
+        icon.classList.remove('bi-moon');
+        icon.classList.add('bi-sun');
         icon.style.color='hsl(50, 90%, 50%)';
     }
 
@@ -210,9 +212,10 @@
                     
                 </ul>
 
-                <button onclick="myFunction()" id="themeToggle" style="width: 8vh;height: 4vh; border: 1px solid green;border-radius: 25px;margin-right: 1%;margin-bottom:3px;">
-                <i class="far fa-sun" style="font-size:1.9rem;color:hsl(50, 90%, 50%);justify-items: left;" class="moon"></i></button>
-                
+                <button onclick="myFunction()" id="themeToggle" style="width: 8vh;height: 4vh; border: 1px solid green;border-radius: 25px;margin-right: 1%;margin-bottom:2px;">
+                    <i class="bi bi-sun" style="font-size:1.9rem;color:hsl(50, 90%, 50%);justify-items: left;"></i>
+                </button>
+                                
                 <form class="d-flex" role="search" id="user-controls">
                     <button type="button" id="btnsign" class="btn btn-outline-success me-2 mt-1" data-bs-toggle="modal"
 
@@ -494,172 +497,5 @@
     Contact Us at nandinijindal010@gmail.com
 </div>
 </div>
-
-
-
-    <div class="wrapper">
-        <br>
-        <h1 class="contact">About Us</h1>
-        <div class="team">
-            <div class="team_member">
-                <div class="team_img">
-                    <img src="pics_used/mine2.jpeg" alt="Team_image">
-                </div>
-                <h3>Nandini Jindal</h3>
-                <p class="role">Developed By</p>
-                <p>Hi there, I am <b>Nandini Jindal</b> the founder of this website. Currently persuing Btech from
-                    Jaypee institue of technology, Noida in Computer science branch. I am very happy to introduce you my
-                    very first website <b>PiLLshArE</b></p>
-            </div>
-            <div class="team_member">
-                <div class="team_img">
-                    <img src="pics_used/sir.jpeg" alt="Team_image">
-                </div>
-                <h3>Mr.Rajesh Bansal</h3>
-                <p class="role">Under The Guidance of</p>
-                <p>I am able to Develop this site only because of my sir, <b>Mr.Rajesh Bansal</b> (the author of REAL
-                    JAVA). He helped me in every aspect. He is the Brain of this Website. Thankyou sir for all your
-                    Guidance and support.</p>
-            </div>
-        </div>
-    </div>
-
-    </div>
-    <div class="text-center fs-3 mb-1" id="contact" style="font-weight: 700;">
-        Contact Us at nandinijindal010@gmail.com
-    </div>
-    </div>
-
-
-
-
-
 </body>
-<script>
-    function submitSignupForm(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        // Access form elements
-        const email = event.target.elements['txtEmail'].value;
-        const password = event.target.elements['txtPwd'].value;
-        const type = event.target.elements['type'].value;
-
-        const data = {
-            emailK: email,
-            pwdK: password,
-            optK: type
-        };
-
-        fetch('/signup', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'success') {
-                    loggedIn(type);
-                } else if (data.message === 'email_exists') {
-                    alert('Email already exists. Please try a different email.');
-                } else {
-                    console.warn('Signup failed: ' + data.message); // Handle other errors
-                }
-            })
-            .catch(error => {
-                alert('An error occurred during signup: ' + error); // Display error message
-            });
-    }
-    function submitLoginForm(event) {
-
-        event.preventDefault();
-        const email = event.target.elements['emaillog'].value;
-        const password = event.target.elements['pwdlog'].value;
-
-        const data = {
-            emailK: email,
-            pwdK: password,
-        };
-        fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email: email, password: password })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                if (data.pass) {
-                    loggedIn(data.type);
-                } else {
-                    alert('Login failed. Please check your credentials.');
-                }
-            })
-            .catch(error => {
-                alert('An error occurred during login: ' + error);
-            });
-    }
-
-
-    const userControls = document.getElementById('user-controls');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    checkLoggedInUser();
-
-    function checkLoggedInUser() {
-        fetch('/check_user_status', { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.pass) {
-                    loggedIn();
-                } else {
-                    // User is not logged in
-                }
-
-            })
-    }
-
-    function loggedIn(type) {
-        logoutBtn.style.display = 'block';
-        userControls.removeChild(document.getElementById('btnsign'));
-        userControls.removeChild(document.getElementById('btnlogin'));
-        logoutBtn.addEventListener('click', function () {
-            logout();
-        });
-        if (type == "Donor") {
-            window.location.href = "./dash-donor.html"
-        }
-        else if (type = "Needy") {
-            window.location.href = "./dash-needy.html"
-        }
-        else if (type = "Admin") {
-            window.location.href = "./dash-admin.html"
-        }
-    }
-    async function logout() {
-        try {
-            const response = await fetch('/logout', {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error('Error logging out');
-            }
-            const responseJson = await response.json();
-
-            if (responseJson.success) {
-                console.log('Logout successful! Redirecting to login...');
-                window.location.href = '/login';
-            } else {
-                console.error('Logout failed. Check server logs for details.');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-</script>
-
-
 </html>
-
